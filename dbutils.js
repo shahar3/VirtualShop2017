@@ -12,20 +12,26 @@ var config = {
     options: {encrypt: true, database: 'Shop'}
 };
 
-var connection = new Connection(config);
-connection.on('connect', function(err) {
-    // If no error, then good to proceed.
-    if(err){
-        console.log(err);
-    }else {
-        console.log("Connected");
-        queryDatabase();
-    }
-});
+var connection;
+
+function searchQuery(query) {
+    console.log('inside');
+    connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Connected");
+            queryDatabase(query);
+        }
+    });
+}
 
 function queryDatabase(query) {
-    request = new Request(
-        query,function (err, rowCount,rows) {
+    console.log(query);
+    request = new Request(query
+        ,function (err, rowCount,rows) {
             console.log(rowCount + ' row(s) returned');
             connection.close();
         }
@@ -40,3 +46,5 @@ function queryDatabase(query) {
     connection.execSql(request);
 
 }
+
+module.exports.search = searchQuery;

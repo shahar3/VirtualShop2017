@@ -3,12 +3,13 @@
  */
 var express = require('express');
 var router = express.Router();
+var db = require('../dbutils');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.send("You are in the /users");
+    db.search('SELECT * FROM UserTb');
 });
-
 
 router.post('/login', function(req,res){
     var userName = req.query.userName;
