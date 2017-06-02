@@ -23,9 +23,9 @@ connection.on('connect', function(err) {
     }
 });
 
-function queryDatabase() {
+function queryDatabase(query) {
     request = new Request(
-        "SELECT * FROM Cart",function (err, rowCount,rows) {
+        query,function (err, rowCount,rows) {
             console.log(rowCount + ' row(s) returned');
             connection.close();
         }

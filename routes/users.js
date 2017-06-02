@@ -40,7 +40,6 @@ router.get('getLastEntry', function(req,res){
 
 });
 
-route.
 
 
 
