@@ -20,6 +20,23 @@ var rowJson = {};
 var arrayOfJsonRows = [];
 var jsonObj;
 
+function insert(query) {
+    console.log(query);
+    connection = new Connection(config);
+    console.log("afterConnection");
+    connection.on('connect', function (err) {
+        if (err) {
+            console.log("error");
+            console.log(err);
+        } else {
+            console.log("Connected");
+            request = new Request(query);
+            connection.execSql(request);
+            console.log("after");
+        }
+    });
+}
+
 function searchQuery(query,callback) {
     connection = new Connection(config);
     connection.on('connect', function (err) {
@@ -71,3 +88,4 @@ function queryDatabase(query,callback) {
 }
 
 module.exports.search = searchQuery;
+module.exports.insert = insert;

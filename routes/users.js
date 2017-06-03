@@ -21,9 +21,9 @@ router.post('/login', function(req,res){
 
 router.post('/register', function(req,res){
     var userName = req.query.userName;
+    var city = req.query.city;
     var password = req.query.password;
     var email = req.query.email;
-    var city = req.query.city;
     var country = req.query.country;
     var address = req.query.address;
     var phone = req.query.phone;
@@ -33,7 +33,9 @@ router.post('/register', function(req,res){
     var creditCardNumber = req.query.creditCardNumber;
     var favoriteTeam = req.query.favoriteTeam;
     var securityAnswer = req.query.securityAnswer;
-    res.send("ok");
+    var cartId = req.query.cartId;
+    var lastEntry = "NULL";
+    db.insert("INSERT INTO Users VALUES ('" + userName + "', '"+ city + "', '"+ password + "', '"+ email + "', '"+ country + "', '"+ address + "', '"+ phone + "', '"+ firstName + "', '"+ lastName + "', '"+ cellular + "', '"+ creditCardNumber + "', '"+ favoriteTeam + "', '"+ securityAnswer + "', '"+ cartId + ", " + lastEntry + ")");
 });
 
 router.post('/login/restorePassword',function(req,res){
