@@ -17,9 +17,8 @@ var columnNames;
 var rowJson = {};
 var arrayOfJsonRows = [];
 var jsonObj;
-var finished = false;
 
-function searchQuery(query) {
+function searchQuery(query,callback) {
     connection = new Connection(config);
     connection.on('connect', function (err) {
         // If no error, then good to proceed.
@@ -27,7 +26,39 @@ function searchQuery(query) {
             console.log(err);
         } else {
             console.log("Connected");
-            queryDatabase(query);
+            request = new Request(query
+                ,function (err, rowCount,rows) {
+                    //console.log(rowJson);
+                    connection.close();
+                    jsonObj = {
+                        rows: arrayOfJsonRows,
+                        numberOfRows: rowCount
+                    };
+                    console.log('change jsonObj');
+                    callback(JSON.stringify(jsonObj));
+                }
+            );
+
+            request.on('columnMetadata', function(columns){
+                columnNames = [];
+                columns.forEach(function(column){
+                    if(column.colName != null){
+                        columnNames.push(column.colName);
+                    }
+                });
+            });
+
+            request.on('row', function (columns) {
+                var counter = 0;
+                columns.forEach(function (column){
+                    rowJson[columnNames[counter++]] = column.value;
+                });
+                arrayOfJsonRows.push(rowJson);
+                rowJson = {};
+            });
+
+            connection.execSql(request);
+
             console.log('print jsonObj');
         }
     });
@@ -35,39 +66,6 @@ function searchQuery(query) {
 }
 
 function queryDatabase(query) {
-    request = new Request(query
-        ,function (err, rowCount,rows) {
-            //console.log(rowJson);
-            connection.close();
-            jsonObj = {
-                rows: arrayOfJsonRows,
-                numberOfRows: rowCount
-            };
-            console.log('change jsonObj');
-            finished = true;
-        }
-    );
-
-    request.on('columnMetadata', function(columns){
-        columnNames = [];
-        columns.forEach(function(column){
-            if(column.colName != null){
-                columnNames.push(column.colName);
-            }
-        });
-    });
-
-    request.on('row', function (columns) {
-        var counter = 0;
-        columns.forEach(function (column){
-            rowJson[columnNames[counter++]] = column.value;
-        });
-        arrayOfJsonRows.push(rowJson);
-        rowJson = {};
-    });
-
-    connection.execSql(request);
-
 }
 
 module.exports.search = searchQuery;

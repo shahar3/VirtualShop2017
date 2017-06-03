@@ -14,8 +14,9 @@ router.get('/', function(req, res, next) {
 router.post('/login', function(req,res){
     var userName = req.query.userName;
     var password = req.query.password;
-    db.search("SELECT * FROM UserTb WHERE userName = '" + userName  + "' AND password = '" + password + "'");
-    //console.log(jsonObj["numberOfRows"]);
+    db.search("SELECT * FROM UserTb WHERE userName = '" + userName  + "' AND password = '" + password + "'",function (jsonObj) {
+        console.log(jsonObj);
+    });
     // res.send("check this user name");
 });
 
