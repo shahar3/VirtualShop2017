@@ -3,6 +3,7 @@
  */
 var express = require('express');
 var router = express.Router();
+var db = require('../dbutils');
 
 router.get('/', function(req, res, next) {
     res.send('in items');
@@ -13,8 +14,13 @@ router.get('/getTopFive', function(req, res, next) {
 });
 
 router.get('/getItems', function(req, res, next) {
-    res.send('user requested items');
     console.log(req.query);
+    var category = req.query.category;
+    console.log(category);
+    var queryStr = "SELECT * FROM Item WHERE category = '"+ category+"'";
+    db.search(queryStr,function (jsonObj) {
+        res.send(jsonObj);
+    });
 });
 
 router.get('/getNewItems', function(req, res, next) {
@@ -36,3 +42,5 @@ router.get('/searchItem', function(req, res, next) {
     res.send('user searched for item');
     console.log(req.query);
 });
+
+module.exports = router;
