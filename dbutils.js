@@ -41,12 +41,11 @@ function searchQuery(query,callback) {
         if (err) {
             console.log(err);
         } else {
+            arrayOfJsonRows = [];
             queryDatabase(query,callback);
         }
     });
 }
-
-
 
 function queryDatabase(query,callback) {
     request = new Request(query
