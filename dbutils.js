@@ -44,47 +44,46 @@ function searchQuery(query,callback) {
         if (err) {
             console.log(err);
         } else {
-            console.log("Connected");
-            request = new Request(query
-                ,function (err, rowCount,rows) {
-                    //console.log(rowJson);
-                    connection.close();
-                    jsonObj = {
-                        rows: arrayOfJsonRows,
-                        numberOfRows: rowCount
-                    };
-                    console.log('change jsonObj');
-                    callback(JSON.stringify(jsonObj));
-                }
-            );
-
-            request.on('columnMetadata', function(columns){
-                columnNames = [];
-                columns.forEach(function(column){
-                    if(column.colName != null){
-                        columnNames.push(column.colName);
-                    }
-                });
-            });
-
-            request.on('row', function (columns) {
-                var counter = 0;
-                columns.forEach(function (column){
-                    rowJson[columnNames[counter++]] = column.value;
-                });
-                arrayOfJsonRows.push(rowJson);
-                rowJson = {};
-            });
-
-            connection.execSql(request);
-
-            console.log('print jsonObj');
+            queryDatabase(query,callback);
         }
     });
-    //return JSON.stringify(jsonObj);
 }
 
-function queryDatabase(query) {
+
+
+function queryDatabase(query,callback) {
+    request = new Request(query
+        ,function (err, rowCount,rows) {
+            //console.log(rowJson);
+            connection.close();
+            jsonObj = {
+                rows: arrayOfJsonRows,
+                numberOfRows: rowCount
+            };
+            console.log('change jsonObj');
+            callback(JSON.stringify(jsonObj));
+        }
+    );
+
+    request.on('columnMetadata', function(columns){
+        columnNames = [];
+        columns.forEach(function(column){
+            if(column.colName != null){
+                columnNames.push(column.colName);
+            }
+        });
+    });
+
+    request.on('row', function (columns) {
+        var counter = 0;
+        columns.forEach(function (column){
+            rowJson[columnNames[counter++]] = column.value;
+        });
+        arrayOfJsonRows.push(rowJson);
+        rowJson = {};
+    });
+
+    connection.execSql(request);
 }
 
 module.exports.search = searchQuery;
