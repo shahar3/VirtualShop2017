@@ -13,9 +13,13 @@ var config = {
 };
 
 var connection;
+var columnNames;
+var rowJson = {};
+var arrayOfJsonRows = [];
+var jsonObj;
+var finished = false;
 
 function searchQuery(query) {
-    console.log('inside');
     connection = new Connection(config);
     connection.on('connect', function (err) {
         // If no error, then good to proceed.
@@ -24,23 +28,42 @@ function searchQuery(query) {
         } else {
             console.log("Connected");
             queryDatabase(query);
+            console.log('print jsonObj');
         }
     });
+    //return JSON.stringify(jsonObj);
 }
 
 function queryDatabase(query) {
-    console.log(query);
     request = new Request(query
         ,function (err, rowCount,rows) {
-            console.log(rowCount + ' row(s) returned');
+            //console.log(rowJson);
             connection.close();
+            jsonObj = {
+                rows: arrayOfJsonRows,
+                numberOfRows: rowCount
+            };
+            console.log('change jsonObj');
+            finished = true;
         }
     );
 
-    request.on('row', function (columns) {
-        columns.forEach(function (column){
-            console.log(column.value);
+    request.on('columnMetadata', function(columns){
+        columnNames = [];
+        columns.forEach(function(column){
+            if(column.colName != null){
+                columnNames.push(column.colName);
+            }
         });
+    });
+
+    request.on('row', function (columns) {
+        var counter = 0;
+        columns.forEach(function (column){
+            rowJson[columnNames[counter++]] = column.value;
+        });
+        arrayOfJsonRows.push(rowJson);
+        rowJson = {};
     });
 
     connection.execSql(request);

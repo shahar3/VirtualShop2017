@@ -14,7 +14,9 @@ router.get('/', function(req, res, next) {
 router.post('/login', function(req,res){
     var userName = req.query.userName;
     var password = req.query.password;
-    res.send("check this user name");
+    db.search("SELECT * FROM UserTb WHERE userName = '" + userName  + "' AND password = '" + password + "'");
+    //console.log(jsonObj["numberOfRows"]);
+    // res.send("check this user name");
 });
 
 router.post('/register', function(req,res){
@@ -31,14 +33,15 @@ router.post('/register', function(req,res){
     var creditCardNumber = req.query.creditCardNumber;
     var favoriteTeam = req.query.favoriteTeam;
     var securityAnswer = req.query.securityAnswer;
+    res.send("ok");
 });
 
 router.post('/login/restorePassword',function(req,res){
-   res.send("resore password");
+    res.send("resore password");
 });
 
 router.get('getLastEntry', function(req,res){
-
+    res.send("ok");
 });
 
 
