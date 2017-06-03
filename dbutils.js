@@ -52,12 +52,14 @@ function queryDatabase(query) {
         columnNames = [];
         columns.forEach(function(column){
             if(column.colName != null){
+                console.log("columnData");
                 columnNames.push(column.colName);
             }
         });
     });
 
     request.on('row', function (columns) {
+        console.log("row");
         var counter = 0;
         columns.forEach(function (column){
             rowJson[columnNames[counter++]] = column.value;
