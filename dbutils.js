@@ -50,8 +50,6 @@ function searchQuery(query,callback) {
     });
 }
 
-
-
 function queryDatabase(query,callback) {
     request = new Request(query
         ,function (err, rowCount,rows) {
