@@ -35,11 +35,16 @@ router.post('/register', function(req,res){
     var securityAnswer = req.query.securityAnswer;
     var cartId = req.query.cartId;
     var lastEntry = "NULL";
-    db.insert("INSERT INTO Users VALUES ('" + userName + "', '"+ city + "', '"+ password + "', '"+ email + "', '"+ country + "', '"+ address + "', '"+ phone + "', '"+ firstName + "', '"+ lastName + "', '"+ cellular + "', '"+ creditCardNumber + "', '"+ favoriteTeam + "', '"+ securityAnswer + "', '"+ cartId + ", " + lastEntry + ")");
+    var query ="INSERT INTO UserTb VALUES ('" + userName + "', '"+ city + "', '"+ password + "', '"+ email + "', '"+ country + "', '"+ address + "', '"+ phone + "', '"+ firstName + "', '"+ lastName + "', '"+ cellular + "', '"+ creditCardNumber + "', '"+ favoriteTeam + "', '"+ securityAnswer + "', '"+ cartId + "', " + lastEntry + ")";
+    db.insert(query)
 });
 
 router.post('/login/restorePassword',function(req,res){
-    res.send("resore password");
+    var userName = req.query.userName;
+    var securityAnswer = req.query.securityAnswer;
+    var query = "SELECT * FROM UserTb WHERE 'userName"
+
+
 });
 
 router.get('getLastEntry', function(req,res){
