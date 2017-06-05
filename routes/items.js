@@ -35,7 +35,9 @@ router.get('/getNewItemsLastMonth', function(req, res, next) {
     var year = curDate.getFullYear();
     console.log('month: '+month+' year: '+year);
     var queryStr = "SELECT * FROM Item WHERE MONTH(dateAdded) = "+ month +" AND YEAR(dateAdded) = " + year;
-    res.send('user requested new items');
+    db.search(queryStr,function (jsonObj) {
+        res.send(jsonObj);
+    })
     console.log(req.query);
 });
 
@@ -49,13 +51,21 @@ router.get('/sortBy', function(req, res, next) {
 });
 
 router.get('/getItemDetails', function(req, res, next) {
-    res.send('user requested detail on item');
     console.log(req.query);
+    var itemId = req.query.itemId;
+    var queryStr = "SELECT * FROM Item where itemId = "+itemId;
+    db.search(queryStr,function (jsonObj) {
+        res.send(jsonObj);
+    })
 });
 
 router.get('/searchItem', function(req, res, next) {
-    res.send('user searched for item');
     console.log(req.query);
+    var itemName = req.query.name;
+    var queryStr = "SELECT * FROM Item where itemName = '" + itemName + "'"
+    db.search(queryStr,function (jsonObj) {
+        res.send(jsonObj);
+    })
 });
 
 module.exports = router;
