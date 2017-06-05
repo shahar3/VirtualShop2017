@@ -5,6 +5,8 @@ var express = require('express');
 var router = express.Router();
 var db = require('../dbutils');
 
+var bodyParser = require('body-parser');
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.send("You are in the /users");
@@ -42,13 +44,55 @@ router.post('/register', function(req,res){
 router.post('/login/restorePassword',function(req,res){
     var userName = req.query.userName;
     var securityAnswer = req.query.securityAnswer;
-    var query = "SELECT * FROM UserTb WHERE 'userName"
-
+    var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "' AND securityAnswer = '" + securityAnswer + "'";
+    db.search(query,function(jsonObj){
+        var json = JSON.parse(jsonObj);
+        console.log(json.rows[0].password);
+    });
 
 });
 
-router.get('getLastEntry', function(req,res){
-    res.send("ok");
+router.get('/getLastEntry', function(req,res){
+    var userName = req.query.userName;
+    var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
+    db.search(query,function(jsonObj){
+        var json = JSON.parse(jsonObj);
+        console.log(json.rows[0].lastEntry);
+    });
+});
+
+router.get('/recommendedItems',function(req,res){
+    var userName = req.query.userName;
+    //take the favourite team
+    var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
+    db.search(query,function(jsonObj){
+        var json = JSON.parse(jsonObj);
+        var favouriteTeam = (json.rows[0].favouriteTeam).split(" ");
+        var country = favouriteTeam[1];
+        console.log("favouriteTeamCountry: " + country);
+        //recommended shirts from same same country
+        query = "SELECT * FROM Item WHERE country = '" + country + "'";
+        db.search(query,function (jsonRec) {
+            var jsonRecomended = JSON.parse(jsonRec);
+            //return the items id
+            console.log(jsonRecomended.rows[0]);
+        });
+    });
+});
+
+router.post('/addToCart',function(req,res){
+    var userName = req.body.userName;
+    console.log(userName);
+    // var itemId = req.query.itemId;
+    // //get the user cart id
+    // var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
+    // db.search(query,function(jsonObj){
+    //    var json = JSON.parse(jsonObj);
+    //    var cartId = json.rows[0].cartId;
+    //    console.log(cartId);
+    //    //add the item to the cart table
+    // });
+
 });
 
 
