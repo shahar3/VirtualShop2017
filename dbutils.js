@@ -8,7 +8,6 @@ var config = {
     userName: 'shahar',
     password: 'yakirHe1',
     server: 'champions.database.windows.net',
-    // If you are on Microsoft Azure, you need this:
     options: {encrypt: true, database: 'Shop'}
 };
 
@@ -30,7 +29,6 @@ function insert(query) {
         } else {
             request = new Request(query
                 ,function (err, rowCount,rows){
-
                 });
             connection.execSql(request);
         }

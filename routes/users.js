@@ -47,7 +47,6 @@ router.post('/login/restorePassword',function(req,res){
         var json = JSON.parse(jsonObj);
         console.log(json.rows[0].password);
     });
-
 });
 
 router.get('/getLastEntry', function(req,res){
@@ -81,26 +80,88 @@ router.post('/addToCart',function(req,res){
     var itemName = req.body.itemName;
     console.log(userName + ":" + itemName);
     //get the user cart id
-     var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
-     db.search(query,function(jsonObj){
-         var json = JSON.parse(jsonObj);
-         var cartId = json.rows[0].cartId;
-         //get the item id
-         query = "SELECT itemId,price FROM Item WHERE itemName ='" + itemName + "'";
-         db.search(query,function(jsonObj){
-             var json = JSON.parse(jsonObj);
-             var itemId = json.rows[0].itemId;
-             var price = json.rows[0].price;
-             //add the item to the cart table
-             query = "INSERT INTO Cart VALUES('" + cartId + "','" + itemId + "','" + price + "')";
-             db.insert(query);
-         });
+    var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
+    db.search(query,function(jsonObj){
+        var json = JSON.parse(jsonObj);
+        var cartId = json.rows[0].cartId;
+        //get the item id
+        query = "SELECT itemId,price FROM Item WHERE itemName ='" + itemName + "'";
+        db.search(query,function(jsonObj){
+            var json = JSON.parse(jsonObj);
+            var itemId = json.rows[0].itemId;
+            var price = json.rows[0].price;
+            //add the item to the cart table
+            query = "INSERT INTO Cart VALUES('" + cartId + "','" + itemId + "','" + price + "')";
+            db.insert(query);
+        });
+    });
+});
 
-     });
+router.get('/displayTheCartItems',function (req,res){
+    var userName = req.query.userName;
+    console.log(userName);
+    //get the user cart id
+    var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
+    db.search(query,function(jsonObj) {
+        var json = JSON.parse(jsonObj);
+        var cartId = json.rows[0].cartId;
+        //get the cart items
+        query = "SELECT itemId,price FROM Cart WHERE cartId = '" + cartId + "'";
+        db.search(query,function (jsonObj) {
+            res.send(jsonObj);
+        });
+    });
+});
 
+router.post('/removeCartItem',function(req,res){
+    var userName = req.body.userName;
+    var itemName = req.body.itemName;
+    //get the item id
+    var query = "SELECT itemId FROM Item WHERE itemName = '" + itemName + "'";
+    db.search(query,function(jsonObj){
+        var json = JSON.parse(jsonObj);
+        var itemId = json.rows[0].itemId;
+        query = "SELECT cartId From UserTb WHERE userName = '" + userName + "'";
+        db.search(query,function (jsonObj){
+            var json = JSON.parse(jsonObj);
+            var cartId = json.rows[0].cartId;
+            //delete the item from the cart
+            query = "DELETE FROM Cart WHERE itemId ='" + itemId + "' AND cartId = '" + cartId  + "'";
+            db.insert(query);
+            res.send("The item was deleted from the cart!");
+        });
+
+    });
+});
+
+router.get('/getThePreviousOrders',function (req,res){
+    var userName = req.query.userName;
+    var query = "Select * FROM OrderTb WHERE userName ='" + userName + "'";
+    db.search(query,function (jsonObj) {
+       var json = JSON.parse(jsonObj);
+       res.send(json);
+    });
+});
+
+router.get('/getOrderDetails',function (req,res) {
+   var userName = req.query.userName;
+   var itemName = req.query.itemName;
+   //get the item id
+    var query = "SELECT itemId FROM Item WHERE itemName = '" + itemName + "'";
+    db.search(query,function(jsonObj) {
+        var json = JSON.parse(jsonObj);
+        var itemId = json.rows[0].itemId;
+        //get the order details
+        query = "SELECT * FROM OrderTb WHERE userName = '" + userName + "' AND itemId = '" + itemId + "'";
+        db.search(query,function (jsonObj) {
+           json  = JSON.parse(jsonObj);
+           res.send(json);
+        });
+    });
 });
 
 
 
 
-module.exports = router;
+
+ module.exports = router;
