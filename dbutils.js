@@ -28,11 +28,11 @@ function insert(query) {
         if (err) {
             console.log(err);
         } else {
-            request = new Request(query,function (err, rowCount,rows) {
+            request = new Request(query
+                ,function (err, rowCount,rows){
 
-            });
+                });
             connection.execSql(request);
-            console.log("done!");
         }
     });
 }
