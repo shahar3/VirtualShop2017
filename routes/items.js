@@ -10,7 +10,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/getTopFive', function(req, res, next) {
-    res.send('user requested top five');
+    var queryStr = "SELECT * FROM Item JOIN ( SELECT TOP 5 itemId, count(*) total FROM OrderTb GROUP BY itemId order by total desc ) sub ON Item.itemId = sub.itemId";
+    db.search(queryStr,function (jsonObj) {
+        res.send(jsonObj);
+    })
 });
 
 router.get('/getItems', function(req, res, next) {
@@ -37,7 +40,7 @@ router.get('/getNewItemsLastMonth', function(req, res, next) {
     var queryStr = "SELECT * FROM Item WHERE MONTH(dateAdded) = "+ month +" AND YEAR(dateAdded) = " + year;
     db.search(queryStr,function (jsonObj) {
         res.send(jsonObj);
-    })
+    });
     console.log(req.query);
 });
 
@@ -61,8 +64,15 @@ router.get('/getItemDetails', function(req, res, next) {
 
 router.get('/searchItem', function(req, res, next) {
     console.log(req.query);
+    var queryStr;
     var itemName = req.query.name;
-    var queryStr = "SELECT * FROM Item where itemName = '" + itemName + "'"
+    var country = req.query.country;
+    if(country!=null){
+        queryStr = "SELECT * FROM Item where itemName = '" + itemName + "' and country = '" + country + "'";
+    }
+    else{
+        queryStr = "SELECT * FROM Item where itemName = '" + itemName + "'";
+    }
     db.search(queryStr,function (jsonObj) {
         res.send(jsonObj);
     })

@@ -2,8 +2,20 @@
  * Created by Yakir Hershkoviz on 02/06/2017.
  */
 var express = require('express');
+var bodyParser = require('body-parser');
 var router = express.Router();
 var db = require('../dbutils');
+var app = express();
+var qs = require('querystring');
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+/**bodyParser.json(options)
+ * Parses the text as JSON and exposes the resulting object on req.body.
+ */
+app.use(bodyParser.json());
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -11,11 +23,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req,res){
-    var userName = req.query.userName;
-    var password = req.query.password;
-    db.search("SELECT * FROM UserTb WHERE userName = '" + userName  + "' AND password = '" + password + "'",function (jsonObj) {
-        console.log(jsonObj);
-    });
+    console.log(req.body.password);
+    // db.search("SELECT * FROM UserTb WHERE userName = '" + userName  + "' AND password = '" + password + "'",function (jsonObj) {
+    //     console.log(jsonObj);
+    // });
     // res.send("check this user name");
 });
 
