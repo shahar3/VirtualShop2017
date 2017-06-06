@@ -28,7 +28,10 @@ function insert(query) {
         if (err) {
             console.log(err);
         } else {
-            request = new Request(query);
+            request = new Request(query
+                ,function (err, rowCount,rows){
+
+                });
             connection.execSql(request);
         }
     });
