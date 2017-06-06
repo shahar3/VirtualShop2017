@@ -5,21 +5,25 @@ var express = require('express');
 var router = express.Router();
 var db = require('../dbutils');
 
-var bodyParser = require('body-parser');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
     res.send("You are in the /users");
 });
 
 router.post('/login', function(req,res){
-    var userName = req.query.userName;
-    var password = req.query.password;
+    //var userName = req.body;
+    //console.log(userName);
+    //var password = req.query.password;
+    //var userName = "yakirhe";
+    //var password = "yakirhe";
+    var userName = req.body.userName;
+    var password = req.body.password;
     db.search("SELECT * FROM UserTb WHERE userName = '" + userName  + "' AND password = '" + password + "'",function (jsonObj) {
         console.log(jsonObj);
     });
-    // res.send("check this user name");
+    //res.send("check this user name");
 });
+
 
 router.post('/register', function(req,res){
     var userName = req.query.userName;
