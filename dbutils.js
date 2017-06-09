@@ -3,6 +3,8 @@
  */
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
+var TYPES = require('tedious').TYPES;
+
 
 var config = {
     userName: 'shahar',
@@ -19,8 +21,7 @@ var rowJson = {};
 var arrayOfJsonRows = [];
 var jsonObj;
 
-function insert(query) {
-    console.log(query);
+function insert(query,callback) {
     connection = new Connection(config);
     console.log("afterConnection");
     connection.on('connect', function (err) {
@@ -32,6 +33,7 @@ function insert(query) {
                 });
             connection.execSql(request);
         }
+        callback();
     });
 }
 
