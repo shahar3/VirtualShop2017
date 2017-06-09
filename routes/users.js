@@ -66,20 +66,19 @@ router.post('/register', function(req,res){
         db.insert(query,function () {
             query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
             db.search(query,function (jsonO) {
-                res.send();
+                res.send(jsonO);
             });
         });
     });
 
 });
 
-router.post('/login/restorePassword',function(req,res){
+router.post('/restorePassword',function(req,res){
     var userName = req.body.userName;
     var securityAnswer = req.body.securityAnswer;
     var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "' AND securityAnswer = '" + securityAnswer + "'";
     db.search(query,function(jsonObj){
-        var json = JSON.parse(jsonObj);
-        console.log(json.rows[0].password);
+        res.send(jsonObj);
     });
 });
 
@@ -87,8 +86,7 @@ router.get('/getLastEntry', function(req,res){
     var userName = req.query.userName;
     var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
     db.search(query,function(jsonObj){
-        var json = JSON.parse(jsonObj);
-        res.send(json.rows[0].lastEntry);
+        res.send(jsonObj);
     });
 });
 
@@ -122,18 +120,44 @@ router.post('/addToCart',function(req,res){
         query = "SELECT itemId,price FROM Item WHERE itemName ='" + itemName + "'";
         db.search(query,function(jsonObj){
             var json = JSON.parse(jsonObj);
-            var itemId = json.rows[0].itemId;
-            var price = json.rows[0].price;
-            //add the item to the cart table
-            query = "INSERT INTO Cart VALUES('" + cartId + "','" + itemId + "','" + price + "')";
-            db.insert(query);
+            if(json.numberOfRows != 0) {
+                var itemId = json.rows[0].itemId;
+                var price = json.rows[0].price;
+                //check if the cart already exist this item
+                query = "SELECT * FROM Cart WHERE cartId ='" + cartId + "' AND itemId = '" + itemId + "'";
+                db.search(query, function (jsonObj) {
+                    json = JSON.parse(jsonObj);
+                    if (json.numberOfRows == 0) {
+                        console.log("insert in if");
+                        query = "INSERT INTO Cart VALUES('" + cartId + "','" + itemId + "','" + price + "', '1')";
+                        db.insert(query, function () {
+                            var obj = {
+                                "cartId":cartId,
+                                "itemId":itemId,
+                                "price":price,
+                                "numberOfItem": 1
+                            }
+                            var json = JSON.stringify(obj);
+                            res.send(json);
+                        });
+                    } else {
+                        console.log("insert in else");
+                        var numberOfItem = parseInt(json.rows[0].numberOfItem, 10) + 1;
+                        query = "UPDATE Cart SET numberOfItem =" + numberOfItem + "WHERE cartId = '" + cartId + "' AND itemId ='" + itemId + "'";
+                        db.insert(query, function () {
+                            res.send("we are update your amount of this item");
+                        });
+                    }
+                });
+            }else{
+                res.send(json);
+            }
         });
     });
 });
 
 router.get('/displayTheCartItems',function (req,res){
     var userName = req.query.userName;
-    console.log(userName);
     //get the user cart id
     var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
     db.search(query,function(jsonObj) {
@@ -154,17 +178,34 @@ router.post('/removeCartItem',function(req,res){
     var query = "SELECT itemId FROM Item WHERE itemName = '" + itemName + "'";
     db.search(query,function(jsonObj){
         var json = JSON.parse(jsonObj);
-        var itemId = json.rows[0].itemId;
-        query = "SELECT cartId From UserTb WHERE userName = '" + userName + "'";
-        db.search(query,function (jsonObj){
-            var json = JSON.parse(jsonObj);
-            var cartId = json.rows[0].cartId;
-            //delete the item from the cart
-            query = "DELETE FROM Cart WHERE itemId ='" + itemId + "' AND cartId = '" + cartId  + "'";
-            db.insert(query);
-            res.send("The item was deleted from the cart!");
-        });
-
+        if(json.numberOfRows != 0) {
+            var itemId = json.rows[0].itemId;
+            query = "SELECT cartId From UserTb WHERE userName = '" + userName + "'";
+            db.search(query, function (jsonObj) {
+                var json = JSON.parse(jsonObj);
+                if(json.numberOfRows != 0) {
+                    var cartId = json.rows[0].cartId;
+                    //delete the item from the cart
+                    query = "DELETE FROM Cart WHERE itemId ='" + itemId + "' AND cartId = '" + cartId + "'";
+                    db.insert(query, function () {
+                        var obj = {
+                            "itemId": itemId,
+                            "cartId": cartId
+                        }
+                        json = JSON.stringify(obj);
+                        res.send(json);
+                    });
+                }else{
+                    var obj = {};
+                    json = JSON.stringify(obj);
+                    res.send(json);
+                }
+            });
+        }else{
+            var obj = {};
+            json = JSON.stringify(obj);
+            res.send(json);
+        }
     });
 });
 
@@ -184,13 +225,19 @@ router.get('/getOrderDetails',function (req,res) {
     var query = "SELECT itemId FROM Item WHERE itemName = '" + itemName + "'";
     db.search(query,function(jsonObj) {
         var json = JSON.parse(jsonObj);
-        var itemId = json.rows[0].itemId;
-        //get the order details
-        query = "SELECT * FROM OrderTb WHERE userName = '" + userName + "' AND itemId = '" + itemId + "'";
-        db.search(query,function (jsonObj) {
-            json  = JSON.parse(jsonObj);
+        if(json.numberOfRows != 0) {
+            var itemId = json.rows[0].itemId;
+            //get the order details
+            query = "SELECT * FROM OrderTb WHERE userName = '" + userName + "' AND itemId = '" + itemId + "'";
+            db.search(query, function (jsonObj) {
+                json = JSON.parse(jsonObj);
+                res.send(json);
+            });
+        }else{
+            var obj = {};
+            json = JSON.stringify(obj);
             res.send(json);
-        });
+        }
     });
 });
 
