@@ -16,6 +16,15 @@ router.get('/getTopFive', function(req, res, next) {
     })
 });
 
+router.get('/getDateDiff',function (req,res) {
+    var now = new Date();
+    console.log(now);
+    var query = "SELECT DATEDIFF(day,"+now+",OrderTb.dateOfOrder) AS DiffDate FROM OrderTb";
+    db.search(query,function (jsonObj) {
+        res.send(jsonObj);
+    })
+})
+
 router.get('/getItems', function(req, res, next) {
     console.log(req.query);
     var category = req.query.category;
