@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
 //Create an individual router to handle the requests for each section
 var index = require('./routes/index');
 var items = require('./routes/items');
@@ -13,6 +14,7 @@ var general = require('./routes/general');
 var management = require('./routes/management');
 
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
