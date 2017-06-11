@@ -251,48 +251,54 @@ router.post('/purchaseCart',function(req,res) {
     var json="";
     db.search(query, function (jsonObj) {
         json = JSON.parse(jsonObj);
-        var cartId = json.rows[0].cartId;
-        query = "SELECT * FROM Cart WHERE cartId = '" + cartId + "'";
-        db.search(query,function(jsonObj){
-            json = JSON.parse(jsonObj);
-            var amountOfProduct = json.numberOfRows;
-            var i = 0;
-            console.log("i: " + i);
-            selectFromCart(userName, dateToDelivery, cartId).then(function (result) {
-                resToSend = result;
-                console.log(result);
-                return insertToOrder(result, userName, dateToDelivery);
-            }).then(function (result) {
-                return deleteFromCart(result, cartId);
-            }).then(function (result) {
-                amountOfProduct = amountOfProduct - 1;
+        if(json.numberOfRows != 0) {
+            var cartId = json.rows[0].cartId;
+            //get all the cart items of the user
+            query = "SELECT * FROM Cart WHERE cartId = '" + cartId + "'";
+            db.search(query, function (jsonObj) {
+                json = JSON.parse(jsonObj);
+                var amountOfProduct = json.numberOfRows;
+                if(amountOfProduct != 0) {
+                    selectFromCart(userName, dateToDelivery, cartId).then(function (result) {
+                        return insertToOrder(result, userName, dateToDelivery);
+                    }).then(function (result) {
+                        return deleteFromCart(result, cartId);
+                    }).then(function (result) {
+                        amountOfProduct = amountOfProduct - 1;
+                    });
+                    res.send(json);
+                }else{
+                    var obj = {};
+                    json = JSON.stringify(obj);
+                    res.send(json);
+                }
             });
+        }else{
+            var obj = {};
+            json = JSON.stringify(obj);
             res.send(json);
-        });
+        }
     });
 });
 
 //delete from cart
 let deleteFromCart = function (result,cartId) {
-    console.log("inside the delete");
     return new Promise(function(resolve,reject){
-        // //delete the cart item that ordered
-        // var parseJson = JSON.parse(result);
-        // var query = "DELETE FROM Cart WHERE cartId='" + cartId +"'";
-        // db.insert(query,function () {
-        //     resolve("DONE!");
+        //delete the cart item that ordered
+        var parseJson = JSON.parse(result);
+        var query = "DELETE FROM Cart WHERE cartId='" + cartId +"'";
+        db.insert(query,function () {
+            resolve("DONE!");
+        });
     });
-    //});
 };
 
 //get the user cart details
 let selectFromCart = function (userName,dateToDelivery,cartId) {
     return new Promise(function (resolve,reject) {
         var query = "SELECT * FROM Cart WHERE cartId ='" + cartId + "'";
-        console.log(cartId);
         db.search(query, function (jsonObj) {
             var json = JSON.parse(jsonObj);
-            console.log(json);
             var arrayOfJsonRows = [];
             var i;
             var rowCount = json.numberOfRows;
@@ -310,7 +316,6 @@ let selectFromCart = function (userName,dateToDelivery,cartId) {
                 arrayOfJsonRows.push(arrayOfJson);
             }
             var jsonToReturn = JSON.stringify(jsonObj);
-            console.log(jsonToReturn);
             resolve(jsonToReturn);
         });
     });
@@ -319,13 +324,12 @@ let selectFromCart = function (userName,dateToDelivery,cartId) {
 let insertToOrder = function (result,userName,dateToDelivery) {
     return new Promise(function(resolve,reject){
         var parseJson = JSON.parse(result);
-        console.log(parseJson.rows[0].itemId + ":" + userName + ":" + parseJson.price + ":" + parseJson.numberOfItem + ":" + parseJson.today + ":" + dateToDelivery);
+        //create order id
         var countQuery = "SELECT * FROM OrderTb";
         var query = "";
         db.search(countQuery,function (jsonObj) {
             var json = JSON.parse(jsonObj);
             var numberOfRows = json.numberOfRows;
-            console.log(numberOfRows);
             //create query that insert few records into the table
             var i;
             query += "INSERT INTO OrderTb VALUES";
@@ -335,7 +339,6 @@ let insertToOrder = function (result,userName,dateToDelivery) {
                     query += ",";
                 }
             }
-            console.log(query);
             db.insert(query,function(){
                 resolve(result);
             });
