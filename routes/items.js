@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
     res.send('in items');
 });
 
+//this function return the top 5 items that purchased more.
 router.get('/getTopFive', function(req, res, next) {
     var queryStr = "SELECT * FROM Item JOIN ( SELECT TOP 5 itemId, count(*) total FROM OrderTb GROUP BY itemId order by total desc ) sub ON Item.itemId = sub.itemId";
     db.search(queryStr,function (jsonObj) {
@@ -25,6 +26,7 @@ router.get('/getDateDiff',function (req,res) {
     })
 })
 
+//this function return the all items or optionally the items from specific category
 router.get('/getItems', function(req, res, next) {
     console.log(req.query);
     var category = req.query.category;
@@ -40,6 +42,7 @@ router.get('/getItems', function(req, res, next) {
     });
 });
 
+//return the new items from last month
 router.get('/getNewItemsLastMonth', function(req, res, next) {
     //get the current date
     var curDate = new Date();
@@ -53,6 +56,7 @@ router.get('/getNewItemsLastMonth', function(req, res, next) {
     console.log(req.query);
 });
 
+//this function sort items vy category
 router.get('/sortBy', function(req, res, next) {
     console.log(req.query);
     var sortBy = req.query.sortBy;
@@ -62,6 +66,7 @@ router.get('/sortBy', function(req, res, next) {
     })
 });
 
+//this function get the items details
 router.get('/getItemDetails', function(req, res, next) {
     console.log(req.query);
     var itemId = req.query.itemId;
@@ -71,6 +76,7 @@ router.get('/getItemDetails', function(req, res, next) {
     })
 });
 
+//this function return istem that similarry to the query search
 router.get('/searchItem', function(req, res, next) {
     console.log(req.query);
     var queryStr;

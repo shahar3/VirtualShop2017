@@ -7,7 +7,7 @@ var db = require('../dbutils');
 var Promise = require('promise');
 
 
-
+//This function return the currently date
 function getDate(){
     var today = new Date();
     var dd = today.getDate();
@@ -26,10 +26,12 @@ function getDate(){
     return today;
 }
 
+
 router.get('/', function(req, res, next) {
     res.send("You are in the /users");
 });
 
+//This function uses for login user and return details about the user
 router.post('/login', function(req,res){
     var userName = req.body.userName;
     var password = req.body.password;
@@ -38,7 +40,9 @@ router.post('/login', function(req,res){
     });
 });
 
-
+//this function is for register user.
+//take all the details of the user and insert into our database.
+//we return details about the user.
 router.post('/register', function(req,res){
     var userName = req.body.userName;
     var city = req.body.city;
@@ -73,6 +77,7 @@ router.post('/register', function(req,res){
 
 });
 
+//this function uses for resore password for regisered user.
 router.post('/restorePassword',function(req,res){
     var userName = req.body.userName;
     var securityAnswer = req.body.securityAnswer;
@@ -82,6 +87,7 @@ router.post('/restorePassword',function(req,res){
     });
 });
 
+//this function get the last entry of spcific user
 router.get('/getLastEntry', function(req,res){
     var userName = req.query.userName;
     var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
@@ -90,6 +96,8 @@ router.get('/getLastEntry', function(req,res){
     });
 });
 
+//this function uses for create recommended items for regisred user.
+//we recomended items that are from same country.
 router.get('/recommendedItems',function(req,res){
     var userName = req.query.userName;
     //take the favourite team
@@ -107,6 +115,7 @@ router.get('/recommendedItems',function(req,res){
     });
 });
 
+//this function add items to the user cart
 router.post('/addToCart',function(req,res){
     var userName = req.body.userName;
     var itemName = req.body.itemName;
@@ -156,6 +165,7 @@ router.post('/addToCart',function(req,res){
     });
 });
 
+//this function return json that contain the details of user cart items.
 router.get('/displayTheCartItems',function (req,res){
     var userName = req.query.userName;
     //get the user cart id
@@ -171,6 +181,8 @@ router.get('/displayTheCartItems',function (req,res){
     });
 });
 
+
+//this function get item name and user and rempove this item from the user cart.
 router.post('/removeCartItem',function(req,res){
     var userName = req.body.userName;
     var itemName = req.body.itemName;
@@ -218,6 +230,7 @@ router.get('/getThePreviousOrders',function (req,res){
     });
 });
 
+//this function return the orderd details
 router.get('/getOrderDetails',function (req,res) {
     var userName = req.query.userName;
     var itemName = req.query.itemName;
@@ -241,6 +254,7 @@ router.get('/getOrderDetails',function (req,res) {
     });
 });
 
+//this function uses for purchase user cart.
 router.post('/purchaseCart',function(req,res) {
     var userName = req.body.userName;
     var dateToDelivery = req.body.dateToDelivery;
@@ -280,6 +294,7 @@ router.post('/purchaseCart',function(req,res) {
         }
     });
 });
+
 
 //delete from cart
 let deleteFromCart = function (result,cartId) {
@@ -321,6 +336,7 @@ let selectFromCart = function (userName,dateToDelivery,cartId) {
     });
 };
 
+//insert to order
 let insertToOrder = function (result,userName,dateToDelivery) {
     return new Promise(function(resolve,reject){
         var parseJson = JSON.parse(result);
@@ -347,7 +363,7 @@ let insertToOrder = function (result,userName,dateToDelivery) {
     });
 };
 
-
+//return the order confirmation for specific date.
 router.get('/orderConfirmation',function(req,res) {
     var userName = req.query.userName;
     var dateOfOrder = req.query.dateOfOrder;
