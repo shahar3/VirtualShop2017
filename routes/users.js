@@ -92,7 +92,12 @@ router.get('/getLastEntry', function(req,res){
     var userName = req.query.userName;
     var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
     db.search(query,function(jsonObj){
-        res.send(jsonObj);
+        var json =
+            {
+                "result":true,
+                "count":1
+            }
+        res.send(json);
     });
 });
 
