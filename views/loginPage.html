@@ -1,5 +1,5 @@
 <!DOCTYPE html >
-<html lang="en" ng-app="myApp">
+<html lang="en" ng-app="myApp" ng-controller="loginController" >
 <head >
     <meta charset="UTF-8">
     <title>Title</title>
@@ -10,13 +10,12 @@
 <body>
 <p>This is login page</p>
 <div>
-    {{test}}
-    <form name="loginForm" ng-controller="loginController">
+    <form name="loginForm" >
         <table>
             <tr>
                 <td>Enter user name:</td>
                 <td>
-                    <input name="userName" type="text" ng-model="userName" minlength="1" maxlength="10" required/>
+                    <input  name="userName" type="text" ng-model="userName" minlength="1" maxlength="10" required/>
                     <span ng-show="loginForm.userName.$error.required">First Name is required</span>
                 </td>
                 <td>
