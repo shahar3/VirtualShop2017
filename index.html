@@ -8,31 +8,29 @@
     <script src="client.js"></script>
 </head>
 <body>
-
-<div ng-controller="mainController">
-    {{test.rows[0].userName}}
-    <form name="loginForm">
-        <table>
-            <tr>
-                <td>Enter user name:</td>
-                <td>
-                    <input name="userName" type="text" ng-model="userName" minlength="1" maxlength="10" required/>
-                    <span ng-show="loginForm.userName.$error.required">First Name is required</span>
-                </td>
-                <td>
-                    <input name="password" type="password" ng-model="password" minlength="1" maxlength="10" required/>
-                    <span ng-show="loginForm.password.$error.required">password is required</span>
-                </td>
-            </tr>
-            <tr>
-                <button ng-click="checkDetailsOnClick()"
-                        ng-disabled="loginForm.userName.$invalid || loginForm.password.$invalid">Submit
-                </button>
-            </tr>
-        </table>
-    </form>
-</div>
-
+<!--<div >-->
+    <!--{{test.rows[0].userName}}-->
+    <!--<form name="loginForm">-->
+        <!--<table>-->
+            <!--<tr>-->
+                <!--<td>Enter user name:</td>-->
+                <!--<td>-->
+                    <!--<input name="userName" type="text" ng-model="userName" minlength="1" maxlength="10" required/>-->
+                    <!--<span ng-show="loginForm.userName.$error.required">First Name is required</span>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<input name="password" type="password" ng-model="password" minlength="1" maxlength="10" required/>-->
+                    <!--<span ng-show="loginForm.password.$error.required">password is required</span>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<button ng-click="checkDetailsOnClick()"-->
+                        <!--ng-disabled="loginForm.userName.$invalid || loginForm.password.$invalid">Submit-->
+                <!--</button>-->
+            <!--</tr>-->
+        <!--</table>-->
+    <!--</form>-->
+<!--</div>-->
 <!--<div ng-controller="testController">-->
     <!--{{test.firstName}}-->
     <!--<table>-->

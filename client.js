@@ -7,11 +7,11 @@ app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when("/", {
             templateUrl: "views/homePage.html",
-            controller: "mainController"
+            controller: "homePageController"
         })
         .when("/login", {
-            templateUrl: "views/login.html",
-            controller: "loginController"
+            templateUrl: "views/loginPage.html",
+
         })
         .when("/cities", {
             templateUrl: "views/cities.html",
@@ -22,8 +22,9 @@ app.config(['$routeProvider', function ($routeProvider) {
         });
 }]);
 
-app.controller('mainController',function ($scope,$http) {
+app.controller('loginController',function ($scope,$http,$location) {
     $scope.checkDetailsOnClick = function () {
+        alert("checkDetailsOnClick");
         var params = {"userName":$scope.userName,"password":$scope.password};
         $http.post("http://localhost:3000/users/login",params).then(function (response) {
             var data = response.data;
@@ -31,15 +32,21 @@ app.controller('mainController',function ($scope,$http) {
             if(data.numberOfRows == 0){
                 alert("user name or password are incorrect");
             }else{
-                alert("done");
+                $location.path('/');
             }
            $scope.test = response.data;
         });
     }
 });
 
-app.controller('testController', function ($scope, $http) {
-    $http.get("http://localhost:3000/users/getLastEntry?userName=michal").then(function (response) {
-        $scope.test = response.data;
-    });
+app.controller('testC',function () {
+    $scope.check = function () {
+        alert("check");
+    }
+});
+
+app.controller('homePageController',function ($scope,$http,$location) {
+    $scope.openLoginPage = function () {
+        $location.path('/login');
+    }
 });
