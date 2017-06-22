@@ -67,18 +67,19 @@
         <input type="text" ng-model="favoriteTeam" placeholder="Enter Favorite Team" name="favoriteTeam" required>
         <span ng-show="registerForm.favoriteTeam.$error.required">Favorite Team is required</span>
         <br>
+        <label><b>Security Question</b></label>
+        <input type="text" ng-model="securityQuestion" placeholder="Enter Security Question" name="securityQuestion" required>
+        <span ng-show="registerForm.securityQuestion.$error.required">Security Question is required</span>
+        <br>
         <label><b>Security Answer</b></label>
         <input type="text" ng-model="securityAnswer" placeholder="Enter Security Answer" name="securityAnswer" required>
         <span ng-show="registerForm.securityAnswer.$error.required">Security Answer is required</span>
         <br>
         <button type="submit" ng-disabled="registerForm.userName.$invalid ||registerForm.city.$invalid || registerForm.password.$invalid ||registerForm.email.$invalid || registerForm.country.$invalid ||registerForm.address.$invalid ||registerForm.phone.$invalid
          ||registerForm.firstName.$invalid ||registerForm.lastName.$invalid ||registerForm.cellular.$invalid ||registerForm.creditCardNumber.$invalid ||registerForm.favoriteTeam.$invalid ||registerForm.securityAnswer.$invalid" ng-click="addUser()">Submit</button>
-        <input type="checkbox"  checked="checked"> Remember me
     </div>
-
     <div class="container" style="background-color:#f1f1f1">
         <button type="button" ng-click="backToHomePage()" class="cancelbtn">Cancel</button>
-        <span class="psw">Forgot <a href="#">password?</a></span>
     </div>
 </form>
 </body>

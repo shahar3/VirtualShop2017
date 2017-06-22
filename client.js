@@ -16,9 +16,13 @@ app.config(['$routeProvider', function ($routeProvider) {
         }).when("/register", {
         templateUrl: "views/register.html",
         controller: "registerController"
-    }).otherwise({
-        redirect: '/',
-    });
+    }).when("/items", {
+        templateUrl: "views/itemsPage.html",
+        controller: "itemsPageController"
+    })
+        .otherwise({
+            redirect: '/',
+        });
 }]);
 
 app.controller('loginController', function ($scope, $http, $location, openPageService) {
@@ -39,6 +43,28 @@ app.controller('loginController', function ($scope, $http, $location, openPageSe
     }
     $scope.backToHomePage = function () {
         $location.path('/');
+    }
+    $scope.restorePassword = function () {
+        var securityAnswer = $scope.securityAnswer;
+        var userName = $scope.userNameRestore;
+        var params = {"userName": userName, "securityAnswer": securityAnswer};
+        $http.post("http://localhost:3000/users/restorePassword", params).then(function (response) {
+            alert("Your password: " + response.data.rows[0].password);
+        });
+    }
+    $scope.getSecurityQuestion = function () {
+        var userName = $scope.userNameRestore;
+        var path = "http://localhost:3000/users/getLastEntry?userName=" + userName;
+        var params = {"username": userName};
+        alert(path);
+        $http({
+            url: path,
+            method: "GET",
+            params: params
+        }).then(function (response) {
+            $scope.securityQuestion = response.data;
+            alert("securityQuestion: " + response.data.rows[0].securityQuestion);
+        });
     }
 });
 
@@ -71,6 +97,31 @@ app.controller('homePageImageController', function ($scope, $http, $location, op
     $scope.displayPage = function (path) {
         openPageService.openPage(path);
     };
+    $scope.displayItemsPage = function () {
+        openPageService.openPage('/items');
+    }
+});
+
+app.controller('itemsPageController', function ($scope, $http, $location) {
+    $http({
+        url: "http://localhost:3000/items/getItems",
+        method: "GET",
+    }).then(function (response) {
+        $scope.teamsFirstCol = response.data.rows;
+    })
+        .then(function () {
+            var userName = "dani";
+            var param = {"username": userName};
+            var path = "http://localhost:3000/items/recommendedItems";
+            $http({
+                url: path,
+                method: "GET",
+                params: param
+            }).then(function (response) {
+                alert("ok");
+                alert(response.data.rows[0].userName);
+            })
+        });
 });
 
 app.controller('registerController', function ($scope, $http, $location, openPageService) {
@@ -90,11 +141,13 @@ app.controller('registerController', function ($scope, $http, $location, openPag
             "lastName": $scope.lastName,
             "cellular": $scope.cellular,
             "creditCardNumber": $scope.creditCardNumber,
-            "favoriteTeam": $scope.favoriteTeam,
+            "favouriteTeam": $scope.favoriteTeam,
+            "securityQuestion": $scope.securityQuestion,
             "securityAnswer": $scope.securityAnswer
         }
         $http.post("http://localhost:3000/users/register", params).then(function (response) {
             var data = response.data;
+            alert(data.numberOfRows);
             if (data.numberOfRows > 0) {
                 alert("You have signed up");
                 openPageService.openPage('/login');
@@ -111,7 +164,6 @@ app.factory('openPageService', function ($location) {
             $location.path(url);
         }
     }
-
 });
 
 

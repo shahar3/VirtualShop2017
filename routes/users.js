@@ -54,6 +54,7 @@ router.post('/register', function (req, res) {
     var cellular = req.body.cellular;
     var creditCardNumber = req.body.creditCardNumber;
     var favoriteTeam = req.body.favoriteTeam;
+    var securityQuestion = req.body.securityQuestion;
     var securityAnswer = req.body.securityAnswer;
     var lastEntry = getDate();
     var cartId;
@@ -63,7 +64,7 @@ router.post('/register', function (req, res) {
         var json = JSON.parse(jsonObj);
         cartId = json.numberOfRows + 1;
         console.log(userName + ":" + city + ":" + password + ":" + email + ":" + country + ":" + address + ":" + phone + ":" + firstName + ":" + lastName + ":" + cellular + ":" + creditCardNumber + ":" + favoriteTeam + ":" + securityAnswer + ":" + cartId + ":" + lastEntry);
-        var query = "INSERT INTO UserTb VALUES ('" + userName + "', '" + city + "', '" + password + "', '" + email + "', '" + country + "', '" + address + "', '" + phone + "', '" + firstName + "', '" + lastName + "', '" + cellular + "', '" + creditCardNumber + "', '" + favoriteTeam + "', '" + securityAnswer + "', '" + cartId + "', '" + lastEntry + "')";
+        var query = "INSERT INTO UserTb VALUES ('" + userName + "', '" + city + "', '" + password + "', '" + email + "', '" + country + "', '" + address + "', '" + phone + "', '" + firstName + "', '" + lastName + "', '" + cellular + "', '" + creditCardNumber + "', '" + favoriteTeam + "', '"+ securityQuestion + "', '" + securityAnswer + "', '" + cartId + "', '" + lastEntry + "')";
         //query = "INSERT INTO UserTb VALUES('michal',"
         db.insert(query, function () {
             query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
@@ -90,14 +91,7 @@ router.get('/getLastEntry', function (req, res) {
     var userName = req.query.userName;
     var query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
     db.search(query, function (jsonObj) {
-        var emp =
-                {
-                    firstName: "yakir", lastName: "hershkoviz", gender: "male", salary: "100"
-                };
-                // {
-                //     firstName: "shahar", lastName: "cohen", gender: "male", salary: "150"
-                // }
-        res.send(emp);
+        res.send(jsonObj);
     });
 });
 
