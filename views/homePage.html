@@ -14,7 +14,7 @@
 <!--</html>-->
 
 <!DOCTYPE html >
-<html lang="en" ng-app="myApp" ng-controller="">
+<html lang="en" ng-app="myApp">
 <head >
     <title>YS-Football</title>
     <meta charset="utf-8">
@@ -22,9 +22,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="angular.js"></script>
-    <script src="angular-route.js"></script>
-    <script src="client.js"></script>
+    <script src="../angular.js"></script>
+    <script src="../angular-route.js"></script>
+    <script src="../client.js"></script>
     <style>
         /* Remove the navbar's default rounded borders and increase the bottom margin */
         .navbar {
@@ -71,8 +71,9 @@
                 <li><a href="#">Contact</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a ng-hide="signInDisplay" ng-click="displayLoginPage()"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
+                <li><a ng-click="displayPage('/login')" ><span class="glyphicon glyphicon-user"></span> Sign In</a></li>
+                <li><a  ng-click="displayPage('/register')"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a  href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
             </ul>
         </div>
     </div>
@@ -82,16 +83,14 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">BLACK FRIDAY DEAL</div>
+                <div class="panel-heading">{{img_url.rows[0].itemName}}</div>
                 <div id="image1" class="panel-body"><img ng-src="{{img_url.rows[0].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
             </div>
         </div>
         <div class="col-sm-4">
             <div class="panel panel-danger">
-                <div class="panel-heading">BLACK FRIDAY DEAL</div>
+                <div class="panel-heading">{{img_url1.rows[1].itemName}}</div>
                 <div class="panel-body"><img ng-src="{{img_url1.rows[1].image}}"  class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
             </div>
 
 
@@ -99,9 +98,8 @@
 
         <div class="col-sm-4">
             <div class="panel panel-success">
-                <div class="panel-heading">BLACK FRIDAY DEAL</div>
+                <div class="panel-heading">{{img_url2.rows[2].itemName}}</div>
                 <div class="panel-body"><img ng-src="{{img_url2.rows[2].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
             </div>
         </div>
     </div>
@@ -111,23 +109,20 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">BLACK FRIDAY DEAL</div>
+                <div class="panel-heading">{{img_url3.rows[3].itemName}}</div>
                 <div class="panel-body"><img ng-src="{{img_url3.rows[3].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
             </div>
         </div>
         <div class="col-sm-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">BLACK FRIDAY DEAL</div>
+                <div class="panel-heading">{{img_url4.rows[4].itemName}}</div>
                 <div class="panel-body"><img ng-src="{{img_url4.rows[4].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
             </div>
         </div>
         <div class="col-sm-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">BLACK FRIDAY DEAL</div>
+                <div class="panel-heading">{{img_url5.rows[5].itemName}}</div>
                 <div class="panel-body"><img ng-src="{{img_url5.rows[5].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
             </div>
         </div>
     </div>

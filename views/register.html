@@ -1,0 +1,85 @@
+<!DOCTYPE html >
+<html lang="en" ng-app="myApp" ng-controller="registerController">
+<head>
+    <link rel="stylesheet" type="text/css" href="views/style.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../angular.js"></script>
+    <script src="../angular-route.js"></script>
+    <script src="../client.js"></script>
+</head>
+<body>
+
+
+<form name="registerForm">
+    <div class="imgcontainer">
+        <img src="https://myslu.slu.edu/res/images/cas-padlock-icon.png" alt="loginImg" class="avatar">
+    </div>
+    <div class="container">
+        <label><b>Username</b></label>
+        <input type="text" pattern="[a-zA-Z]+" ng-model="userName" placeholder="Enter Username" minlength="3"
+               maxlength="8" name="userName" required>
+        <span ng-show="registerForm.userName.$error.pattern || registerForm.userName.$error.required||registerForm.userName.$error.minlength||registerForm.userName.$error.maxlength">Username must be between 5-10 characters (letters only)</span>
+        <br>
+        <label><b>City</b></label>
+        <input type="text" ng-model="city" placeholder="Enter City" name="city" required>
+        <span ng-show="registerForm.city.$error.required">City is required</span>
+        <br>
+        <label><b>Password</b></label>
+        <input type="password" pattern="^[a-zA-Z0-9]+$" placeholder="Enter Password" ng-model="password" minlength="5"
+               maxlength="10" name="password" required>
+        <span ng-show="registerForm.password.$error.pattern || registerForm.password.$error.required || registerForm.password.$error.minlength||registerForm.password.$error.maxlength">password is required. must be 5-10 characters</span>
+        <br>
+        <label><b>Email</b></label>
+        <input type="text" ng-model="email" placeholder="Enter email" name="email" required>
+        <span ng-show="registerForm.email.$error.required || registerForm.email.$error.email">email is required</span>
+        <br>
+        <label><b>Country</b></label>
+        <input type="text" ng-model="country" placeholder="Enter Country" name="country" required>
+        <span ng-show="registerForm.country.$error.required">Country is required</span>
+        <br>
+        <label><b>Address</b></label>
+        <input type="text" ng-model="address" placeholder="Enter Address" name="address" required>
+        <span ng-show="registerForm.address.$error.required">Address is required</span>
+        <br>
+        <label><b>Phone</b></label>
+        <input type="text" pattern="^[0-9]*$" ng-model="phone" placeholder="Enter Phone" name="phone" required>
+        <span ng-show="registerForm.phone.$error.required || registerForm.phone.$error.pattern">Phone is required(only numbers)</span>
+        <br>
+        <label><b>First Name</b></label>
+        <input type="text" ng-model="firstName" placeholder="Enter FirstName" name="firstName" required>
+        <span ng-show="registerForm.firstName.$error.required">First Name is required</span>
+        <br>
+        <label><b>Last Name</b></label>
+        <input type="text" ng-model="lastName" placeholder="Enter Last Name" name="lastName" required>
+        <span ng-show="registerForm.lastName.$error.required">Last Name is required</span>
+        <br>
+        <label><b>Cellular</b></label>
+        <input type="text" ng-model="cellular" placeholder="Enter Cellular" name="cellular" required>
+        <span ng-show="registerForm.cellular.$error.required|| registerForm.cellular.$error.pattern">Cellular is required(only numbers)</span>
+        <br>
+        <label><b>Credit Card Number</b></label>
+        <input type="text" ng-model="creditCardNumber" placeholder="Enter Credit Card Number" name="creditCardNumber"
+               required>
+        <span ng-show="registerForm.creditCardNumber.$error.required|| registerForm.creditCardNumber.$error.pattern">Credit Card Number is required</span>
+        <br>
+        <label><b>Favorite Team(name, countery)</b></label>
+        <input type="text" ng-model="favoriteTeam" placeholder="Enter Favorite Team" name="favoriteTeam" required>
+        <span ng-show="registerForm.favoriteTeam.$error.required">Favorite Team is required</span>
+        <br>
+        <label><b>Security Answer</b></label>
+        <input type="text" ng-model="securityAnswer" placeholder="Enter Security Answer" name="securityAnswer" required>
+        <span ng-show="registerForm.securityAnswer.$error.required">Security Answer is required</span>
+        <br>
+        <button type="submit" ng-disabled="registerForm.userName.$invalid ||registerForm.city.$invalid || registerForm.password.$invalid ||registerForm.email.$invalid || registerForm.country.$invalid ||registerForm.address.$invalid ||registerForm.phone.$invalid
+         ||registerForm.firstName.$invalid ||registerForm.lastName.$invalid ||registerForm.cellular.$invalid ||registerForm.creditCardNumber.$invalid ||registerForm.favoriteTeam.$invalid ||registerForm.securityAnswer.$invalid" ng-click="addUser()">Submit</button>
+        <input type="checkbox"  checked="checked"> Remember me
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+        <button type="button" ng-click="backToHomePage()" class="cancelbtn">Cancel</button>
+        <span class="psw">Forgot <a href="#">password?</a></span>
+    </div>
+</form>
+</body>
+</html>
