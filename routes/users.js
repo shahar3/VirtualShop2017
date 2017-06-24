@@ -54,6 +54,7 @@ router.post('/register', function (req, res) {
     var cellular = req.body.cellular;
     var creditCardNumber = req.body.creditCardNumber;
     var favoriteTeam = req.body.favoriteTeam;
+    var favoriteCategories = req.body.favouriteCategories;
     var securityQuestion = req.body.securityQuestion;
     var securityAnswer = req.body.securityAnswer;
     var lastEntry = getDate();
@@ -64,7 +65,7 @@ router.post('/register', function (req, res) {
         var json = JSON.parse(jsonObj);
         cartId = json.numberOfRows + 1;
         console.log(userName + ":" + city + ":" + password + ":" + email + ":" + country + ":" + address + ":" + phone + ":" + firstName + ":" + lastName + ":" + cellular + ":" + creditCardNumber + ":" + favoriteTeam + ":" + securityAnswer + ":" + cartId + ":" + lastEntry);
-        var query = "INSERT INTO UserTb VALUES ('" + userName + "', '" + city + "', '" + password + "', '" + email + "', '" + country + "', '" + address + "', '" + phone + "', '" + firstName + "', '" + lastName + "', '" + cellular + "', '" + creditCardNumber + "', '" + favoriteTeam + "', '"+ securityQuestion + "', '" + securityAnswer + "', '" + cartId + "', '" + lastEntry + "')";
+        var query = "INSERT INTO UserTb VALUES ('" + userName + "', '" + city + "', '" + password + "', '" + email + "', '" + country + "', '" + address + "', '" + phone + "', '" + firstName + "', '" + lastName + "', '" + cellular + "', '" + creditCardNumber + "', '" + favoriteTeam + "', '" +favoriteCategories+"', '" + securityQuestion + "', '" + securityAnswer + "', '" + cartId + "', '0','" + lastEntry + "')";
         //query = "INSERT INTO UserTb VALUES('michal',"
         db.insert(query, function () {
             query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
@@ -124,38 +125,46 @@ router.post('/addToCart', function (req, res) {
     db.search(query, function (jsonObj) {
         var json = JSON.parse(jsonObj);
         var cartId = json.rows[0].cartId;
+        var totalCartPrice = json.rows[0].totalCartPrice;
         //get the item id
-        query = "SELECT itemId,price FROM Item WHERE itemName ='" + itemName + "'";
+        query = "SELECT itemId,price,image FROM Item WHERE itemName ='" + itemName + "'";
         db.search(query, function (jsonObj) {
             var json = JSON.parse(jsonObj);
             if (json.numberOfRows != 0) {
                 var itemId = json.rows[0].itemId;
                 var price = json.rows[0].price;
-                //check if the cart already exist this item
-                query = "SELECT * FROM Cart WHERE cartId ='" + cartId + "' AND itemId = '" + itemId + "'";
-                db.search(query, function (jsonObj) {
-                    json = JSON.parse(jsonObj);
-                    if (json.numberOfRows == 0) {
-                        console.log("insert in if");
-                        query = "INSERT INTO Cart VALUES('" + cartId + "','" + itemId + "','" + price + "', '1')";
-                        db.insert(query, function () {
-                            var obj = {
-                                "cartId": cartId,
-                                "itemId": itemId,
-                                "price": price,
-                                "numberOfItem": 1
-                            }
-                            var json = JSON.stringify(obj);
-                            res.send(json);
-                        });
-                    } else {
-                        console.log("insert in else");
-                        var numberOfItem = parseInt(json.rows[0].numberOfItem, 10) + 1;
-                        query = "UPDATE Cart SET numberOfItem =" + numberOfItem + "WHERE cartId = '" + cartId + "' AND itemId ='" + itemId + "'";
-                        db.insert(query, function () {
-                            res.send("we are update your amount of this item");
-                        });
-                    }
+                var image = json.rows[0].image;
+                var numberOfItem = parseInt(json.rows[0].numberOfItem, 10) + 1;
+                var newTotalCartPrice = parseInt(totalCartPrice,10) + parseInt(price,10);
+                query = "UPDATE UserTb SET totalCartPrice =" + newTotalCartPrice + " WHERE userName = '" + userName + "'";
+                db.insert(query, function () {
+                    //check if the cart already exist this item
+                    query = "SELECT * FROM Cart WHERE cartId ='" + cartId + "' AND itemId = '" + itemId + "'";
+                    db.search(query, function (jsonObj) {
+                        json = JSON.parse(jsonObj);
+                        if (json.numberOfRows == 0) {
+                            console.log("insert in if");
+                            query = "INSERT INTO Cart VALUES('" + cartId + "','" + itemId + "','" + price + "', '1','" + image + "')";
+                            db.insert(query, function () {
+                                var obj = {
+                                    "cartId": cartId,
+                                    "itemId": itemId,
+                                    "price": price,
+                                    "numberOfItem": 1,
+                                    "image": image
+                                }
+                                var json = JSON.stringify(obj);
+                                res.send(json);
+                            });
+                        } else {
+                            console.log("insert in else");
+                            var numberOfItem = parseInt(json.rows[0].numberOfItem, 10) + 1;
+                            query = "UPDATE Cart SET numberOfItem =" + numberOfItem + "WHERE cartId = '" + cartId + "' AND itemId ='" + itemId + "'";
+                            db.insert(query, function () {
+                                res.send("we are update your amount of this item");
+                            });
+                        }
+                    });
                 });
             } else {
                 res.send(json);
@@ -172,8 +181,9 @@ router.get('/displayTheCartItems', function (req, res) {
     db.search(query, function (jsonObj) {
         var json = JSON.parse(jsonObj);
         var cartId = json.rows[0].cartId;
+        var totalCartPrice = json.rows[0].totalCartPrice;
         //get the cart items
-        query = "SELECT itemId,price FROM Cart WHERE cartId = '" + cartId + "'";
+        query = "SELECT * FROM Cart WHERE cartId = '" + cartId + "'";
         db.search(query, function (jsonObj) {
             res.send(jsonObj);
         });

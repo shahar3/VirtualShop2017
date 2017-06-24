@@ -42,7 +42,7 @@ img.avatar {
 }
 
 .container {
-    /*padding: 16px;*/
+    padding: 16px;
 }
 
 
@@ -54,7 +54,7 @@ span.psw {
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
     span.psw {
-        /*display: block;*/
+        display: block;
         float: none;
     }
     .cancelbtn {
@@ -62,7 +62,44 @@ span.psw {
     }
 }
 
-#rightImg{
-    padding-left: 20cm;
+#leftImg{
+    width: 10cm;
+    position: absolute;
+}
+/*#rightImg{*/
+    /*padding-left: 10cm;*/
+/*}*/
+
+#searchItemInput{
+    color: black;
+}
+
+#detailsBtn{
+    padding-left: 15cm;
+}
+
+#addToCartBtn{
+    background-color: green;
+}
+
+#helloUser{
+    color: green;
+    background-color: blue;
+}
+
+#left{
+    padding-left: 15cm;
+}
+
+#labelRecItems{
+    background-color: black;
+    color: green;
+    margin-left: 2.8cm;
+}
+
+#labelAllItems{
+    background-color: black;
+    color: green;
+    margin-left: 2.8cm;
 }
 

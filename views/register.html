@@ -19,7 +19,7 @@
         <label><b>Username</b></label>
         <input type="text" pattern="[a-zA-Z]+" ng-model="userName" placeholder="Enter Username" minlength="3"
                maxlength="8" name="userName" required>
-        <span ng-show="registerForm.userName.$error.pattern || registerForm.userName.$error.required||registerForm.userName.$error.minlength||registerForm.userName.$error.maxlength">Username must be between 5-10 characters (letters only)</span>
+        <span ng-show="registerForm.userName.$error.pattern || registerForm.userName.$error.required||registerForm.userName.$error.minlength||registerForm.userName.$error.maxlength">Username must be between 3-8 characters (letters only)</span>
         <br>
         <label><b>City</b></label>
         <input type="text" ng-model="city" placeholder="Enter City" name="city" required>
@@ -66,6 +66,11 @@
         <label><b>Favorite Team(name, countery)</b></label>
         <input type="text" ng-model="favoriteTeam" placeholder="Enter Favorite Team" name="favoriteTeam" required>
         <span ng-show="registerForm.favoriteTeam.$error.required">Favorite Team is required</span>
+        <br>
+        <br>
+        <label><b>Favorite Categories, options(men,women,children), examples(men, women)</b></label>
+        <input type="text" ng-model="favoriteCategories" placeholder="Enter Favorite Categories" name="favoriteCategories" required>
+        <span ng-show="registerForm.favoriteCategories.$error.required">Favorite Categories is required</span>
         <br>
         <label><b>Security Question</b></label>
         <input type="text" ng-model="securityQuestion" placeholder="Enter Security Question" name="securityQuestion" required>

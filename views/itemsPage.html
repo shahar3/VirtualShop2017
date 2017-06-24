@@ -34,27 +34,59 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">Deals</a></li>
-                <li><a href="#">Stores</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a ng-click="getItems('men')">Men</a></li>
+                <li><a ng-click="getItems('women')">Women</a></li>
+                <li><a ng-click="getItems('children')">Children</a></li>
+                <li>Sort By:<select>
+                    <option Value="Sort By">Sort By</option>
+                    <option ng-click="sortBy('price')" value="Price">Price</option>
+                    <option ng-click="sortBy('description')" value="Size">Size</option>
+                </select></li>
+                <li><a><input ng-model="querySearch" id="searchItemInput" align="center"/></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a ng-click="displayPage('/login')"><span class="glyphicon glyphicon-user"></span> Sign In</a></li>
-                <li><a ng-click="displayPage('/register')"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+                <li><a ng-hide="afterUserSignIn" ng-click="displayPage('/login')"><span class="glyphicon glyphicon-user"></span> Sign In</a></li>
+                <li><a ng-hide="afterUserSignIn" ng-click="displayPage('/register')"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
                 </li>
-                <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
+                <li><a ng-show="afterUserSignIn">Hello,
+                    <div>{{currentUser}}, Last Entry: {{lastEntry}}</div>
+                </a></li>
+                <li><a ng-click="displayPage('/cart')" ng-show="afterUserSignIn"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
             </ul>
         </div>
     </div>
 </nav>
 <div id="leftImg">
-    <div class="container" ng-repeat="shirt in teamsFirstCol">
+    <label id="labelAllItems">All Items</label>
+    <div class="container" ng-repeat="shirt in teamsFirstCol | filter:querySearch">
         <div class="row">
             <div class="col-sm-4">
                 <div class="panel panel-danger">
                     <div class="panel-heading">{{shirt.itemName}}</div>
-                    <div class="panel-body"><img ng-src="{{shirt.image}}" class="img-responsive"style="width:100%" alt="Image"></div>
+                    <div class="panel-body"><img ng-src="{{shirt.image}}" class="img-responsive" style="width:100%"
+                                                 alt="Image"></div>
+                    <div class="panel-footer" align="center">
+                        Price: {{shirt.price}} , Quantity: {{shirt.quantity}} , Size: {{shirt.description}}
+                        <button ng-click="addToCart(shirt.itemName)">Add To Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="left">
+    <label id="labelRecItems">Recommended Items</label>
+    <div class="container" ng-repeat="team in teamsRecCol">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">{{team.itemName}}</div>
+                    <div class="panel-body"><img ng-src="{{team.image}}" class="img-responsive" style="width:100%"
+                                                 alt="Image"></div>
+                    <div class="panel-footer" align="center">
+                        Price: {{team.price}} , Quantity: {{team.quantity}} , Size: {{team.description}}
+                        <button ng-click="addToCart(team.itemName)">Add To Cart</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,18 +94,17 @@
 </div>
 <!--<div id="rightImg">-->
     <!--<div class="container">-->
-        <!--<div class="row" ng-repeat="team in teamsRecCol">-->
+        <!--<div class="row">-->
             <!--<div class="col-sm-4">-->
                 <!--<div class="panel panel-primary">-->
-                    <!--<div class="panel-heading">{{team.itemName}}</div>-->
-                    <!--<div id="image1" class="panel-body"><img ng-src="{{team.image}}" class="img-responsive"-->
-                                                             <!--style="width:100%" alt="Image"></div>-->
+                    <!--<div class="panel-heading">hiiiiii</div>-->
+                    <!--<div class="panel-body">class="img-responsive" style="width:100%"-->
+                                                 <!--alt="Image"></div>-->
                 <!--</div>-->
             <!--</div>-->
         <!--</div>-->
     <!--</div>-->
 <!--</div>-->
-
 
 
 <!--<div class="col-sm-4">-->
@@ -83,16 +114,16 @@
                                      <!--style="width:100%" alt="Image"></div>-->
     <!--</div>-->
 <!--</div>-->
-<!--<div class="col-sm-4">-->
+<!--<div class="col-sm-4" id="left">-->
     <!--<div class="panel panel-primary">-->
         <!--<div class="panel-heading">{{img_url5.rows[5].itemName}}</div>-->
         <!--<div class="panel-body"><img ng-src="{{img_url5.rows[5].image}}" class="img-responsive"-->
                                      <!--style="width:100%" alt="Image"></div>-->
     <!--</div>-->
 <!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<br><br>-->
+</div>
+</div>
+<br><br>
 
 <footer class="container-fluid text-center">
 </footer>

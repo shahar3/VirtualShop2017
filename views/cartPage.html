@@ -1,0 +1,76 @@
+<!DOCTYPE html >
+<html lang="en" ng-app="myApp">
+<head>
+    <link rel="stylesheet" type="text/css" href="views/style.css">
+    <title>YS-Football</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../angular.js"></script>
+    <script src="../angular-route.js"></script>
+    <script src="../client.js"></script>
+
+</head>
+<body>
+
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Welcome To YS Football</h1>
+        <h2>The largest online store in the world</h2>
+    </div>
+</div>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li>Sort By:<select>
+                    <option Value="Sort By">Sort By</option>
+                    <option ng-click="sortBy('price')" value="Price">Price</option>
+                    <option ng-click="sortBy('description')" value="Size">Size</option>
+                </select></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a ng-click="displayPage('/login')"><span class="glyphicon glyphicon-user"></span> Sign In</a></li>
+                <li><a ng-click="displayPage('/register')"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+                </li>
+                <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div>
+    Total Price: {{totalPrice.rows[0].totalCartPrice }}
+</div>
+<div id="leftImg">
+    <div class="container" ng-repeat="shirt in teamsFirstCol">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">{{shirt.itemId}}</div>
+                    <div class="panel-body"><img ng-src="{{shirt.image}}" class="img-responsive" style="width:100%"
+                                                 alt="Image"></div>
+                    <div class="panel-footer" align="center">
+                        Price: {{shirt.price}} , Quantity: {{shirt.numberOfItem}}
+                        <button ng-click="removeFromCart(shirt.itemId)">Remove From Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="container-fluid text-center">
+</footer>
+
+</body>
+</html>

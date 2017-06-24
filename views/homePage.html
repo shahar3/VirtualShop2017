@@ -1,25 +1,25 @@
 <!--<head>-->
-    <!--<meta charset="UTF-8">-->
-    <!--<title>Title</title>-->
-    <!--<script src="angular.js"></script>-->
-    <!--<script src="angular-route.js"></script>-->
-    <!--<script src="client.js"></script>-->
+<!--<meta charset="UTF-8">-->
+<!--<title>Title</title>-->
+<!--<script src="angular.js"></script>-->
+<!--<script src="angular-route.js"></script>-->
+<!--<script src="client.js"></script>-->
 <!--</head>-->
 <!--<body>-->
-    <!--<p>this is home page</p>-->
+<!--<p>this is home page</p>-->
 
-    <!--<button ng-click="openLoginPage()"></button>-->
+<!--<button ng-click="openLoginPage()"></button>-->
 
 <!--</body>-->
 <!--</html>-->
 
 <!--<div class="row" ng-repeat="team in teams">-->
-    <!--<div class="col-sm-4">-->
-        <!--<div class="panel panel-primary">-->
-            <!--<div class="panel-heading">{{team.itemName}}</div>-->
-            <!--<div id="image1" class="panel-body"><img ng-src="{{team.image}}" class="img-responsive" style="width:100%" alt="Image"></div>-->
-        <!--</div>-->
-    <!--</div>-->
+<!--<div class="col-sm-4">-->
+<!--<div class="panel panel-primary">-->
+<!--<div class="panel-heading">{{team.itemName}}</div>-->
+<!--<div id="image1" class="panel-body"><img ng-src="{{team.image}}" class="img-responsive" style="width:100%" alt="Image"></div>-->
+<!--</div>-->
+<!--</div>-->
 <!--</div>-->
 <!--$scope.teams =-->
 <!--[-->
@@ -35,7 +35,8 @@
 
 <!DOCTYPE html >
 <html lang="en" ng-app="myApp">
-<head >
+<head>
+    <link rel="stylesheet" type="text/css" href="views/style.css">
     <title>YS-Football</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,22 +47,22 @@
     <script src="../angular-route.js"></script>
     <script src="../client.js"></script>
     <!--<style>-->
-        <!--/* Remove the navbar's default rounded borders and increase the bottom margin */-->
-        <!--.navbar {-->
-            <!--margin-bottom: 50px;-->
-            <!--border-radius: 0;-->
-        <!--}-->
+    <!--/* Remove the navbar's default rounded borders and increase the bottom margin */-->
+    <!--.navbar {-->
+    <!--margin-bottom: 50px;-->
+    <!--border-radius: 0;-->
+    <!--}-->
 
-        <!--/* Remove the jumbotron's default bottom margin */-->
-        <!--.jumbotron {-->
-            <!--margin-bottom: 0;-->
-        <!--}-->
+    <!--/* Remove the jumbotron's default bottom margin */-->
+    <!--.jumbotron {-->
+    <!--margin-bottom: 0;-->
+    <!--}-->
 
-        <!--/* Add a gray background color and some padding to the footer */-->
-        <!--footer {-->
-            <!--background-color: #f2f2f2;-->
-            <!--padding: 25px;-->
-        <!--}-->
+    <!--/* Add a gray background color and some padding to the footer */-->
+    <!--footer {-->
+    <!--background-color: #f2f2f2;-->
+    <!--padding: 25px;-->
+    <!--}-->
     <!--</style>-->
 </head>
 <body>
@@ -82,7 +83,7 @@
                 <span class="icon-bar"></span>
             </button>
         </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
+        <div class="collapse navbar-collapse" id="myNavbar" align="center">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
                 <li><a ng-click="displayItemsPage()">Products</a></li>
@@ -91,9 +92,16 @@
                 <li><a href="#">Contact</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a ng-click="displayPage('/login')" ><span class="glyphicon glyphicon-user"></span> Sign In</a></li>
-                <li><a  ng-click="displayPage('/register')"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a  href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
+                <li><a ng-hide="userSignIn" ng-click="displayPage('/login')"><span
+                        class="glyphicon glyphicon-user"></span> Sign In</a></li>
+                <li><a ng-hide="userSignIn" ng-click="displayPage('/register')"><span
+                        class="glyphicon glyphicon-user"></span> Sign Up</a>
+                </li>
+                <li><a ng-show="afterUserSignIn">Hello,
+                    <div>{{currentUser}}, Last Entry: {{lastEntry}}</div>
+                </a></li>
+                <li><a ng-show="afterUserSignIn" ng-click="displayPage('/cart')"><span
+                        class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
             </ul>
         </div>
     </div>
@@ -104,13 +112,24 @@
         <div class="col-sm-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">{{img_url.rows[0].itemName}}</div>
-                <div id="image1" class="panel-body"><img ng-src="{{img_url.rows[0].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
+                <div id="image1" class="panel-body"><img ng-click="addToCart()" ng-src="{{img_url.rows[0].image}}"
+                                                         class="img-responsive"
+                                                         style="width:100%" alt="Image"></div>
+                <div class="panel-footer" align="center">
+                    Price: {{img_url.rows[0].price}} , Quantity: {{img_url.rows[0].quantity}} , Size: {{img_url.rows[0].description}}
+                    <button ng-click="addToCart(img_url.rows[0].itemName)">Add To Cart</button>
+                </div>
             </div>
         </div>
         <div class="col-sm-4">
             <div class="panel panel-danger">
                 <div class="panel-heading">{{img_url1.rows[1].itemName}}</div>
-                <div class="panel-body"><img ng-src="{{img_url1.rows[1].image}}"  class="img-responsive" style="width:100%" alt="Image"></div>
+                <div class="panel-body"><img ng-src="{{img_url1.rows[1].image}}" class="img-responsive"
+                                             style="width:100%" alt="Image"></div>
+                <div class="panel-footer" align="center">
+                    Price: {{img_url1.rows[1].price}} , Quantity: {{img_url1.rows[1].quantity}} , Size: {{img_url1.rows[1].description}}
+                    <button ng-click="addToCart(img_url1.rows[1].itemName)">Add To Cart</button>
+                </div>
             </div>
 
 
@@ -119,34 +138,56 @@
         <div class="col-sm-4">
             <div class="panel panel-success">
                 <div class="panel-heading">{{img_url2.rows[2].itemName}}</div>
-                <div class="panel-body"><img ng-src="{{img_url2.rows[2].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
+                <div class="panel-body"><img ng-src="{{img_url2.rows[2].image}}" class="img-responsive"
+                                             style="width:100%" alt="Image"></div>
+                <div class="panel-footer" align="center">
+                    Price: {{img_url2.rows[2].price}} , Quantity: {{img_url2.rows[2].quantity}} , Size: {{img_url2.rows[2].description}}
+                    <button ng-click="addToCart(img_url2.rows[2].itemName)">Add To Cart</button>
+                </div>
             </div>
         </div>
     </div>
-</div><br>
+</div>
+<br>
 
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">{{img_url3.rows[3].itemName}}</div>
-                <div class="panel-body"><img ng-src="{{img_url3.rows[3].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
+                <div class="panel-body"><img ng-src="{{img_url3.rows[3].image}}" class="img-responsive"
+                                             style="width:100%" alt="Image"></div>
+                <div class="panel-footer" align="center">
+                    Price: {{img_url3.rows[3].price}} , Quantity: {{img_url3.rows[3].quantity}} , Size: {{img_url3.rows[3].description}}
+                    <button ng-click="addToCart(img_url3.rows[3].itemName)">Add To Cart</button>
+                </div>
             </div>
         </div>
         <div class="col-sm-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">{{img_url4.rows[4].itemName}}</div>
-                <div class="panel-body"><img ng-src="{{img_url4.rows[4].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
+                <div class="panel-body"><img ng-src="{{img_url4.rows[4].image}}" class="img-responsive"
+                                             style="width:100%" alt="Image"></div>
+                <div class="panel-footer" align="center">
+                    Price: {{img_url4.rows[4].price}} , Quantity: {{img_url4.rows[4].quantity}} , Size: {{img_url4.rows[4].description}}
+                    <button ng-click="addToCart(img_url4.rows[4].itemName)">Add To Cart</button>
+                </div>
             </div>
         </div>
         <div class="col-sm-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">{{img_url5.rows[5].itemName}}</div>
-                <div class="panel-body"><img ng-src="{{img_url5.rows[5].image}}" class="img-responsive" style="width:100%" alt="Image"></div>
+                <div class="panel-body"><img ng-src="{{img_url5.rows[5].image}}" class="img-responsive"
+                                             style="width:100%" alt="Image"></div>
+                <div class="panel-footer" align="center">
+                    Price: {{img_url5.rows[5].price}} , Quantity: {{img_url5.rows[5].quantity}} , Size: {{img_url5.rows[5].description}}
+                    <button ng-click="addToCart(img_url5.rows[5].itemName)">Add To Cart</button>
+                </div>
             </div>
         </div>
     </div>
-</div><br><br>
+</div>
+<br><br>
 
 <footer class="container-fluid text-center">
 </footer>
