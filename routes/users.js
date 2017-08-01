@@ -65,7 +65,7 @@ router.post('/register', function (req, res) {
         var json = JSON.parse(jsonObj);
         cartId = json.numberOfRows + 1;
         console.log(userName + ":" + city + ":" + password + ":" + email + ":" + country + ":" + address + ":" + phone + ":" + firstName + ":" + lastName + ":" + cellular + ":" + creditCardNumber + ":" + favoriteTeam + ":" + securityAnswer + ":" + cartId + ":" + lastEntry);
-        var query = "INSERT INTO UserTb VALUES ('" + userName + "', '" + city + "', '" + password + "', '" + email + "', '" + country + "', '" + address + "', '" + phone + "', '" + firstName + "', '" + lastName + "', '" + cellular + "', '" + creditCardNumber + "', '" + favoriteTeam + "', '" +favoriteCategories+"', '" + securityQuestion + "', '" + securityAnswer + "', '" + cartId + "', '0','" + lastEntry + "')";
+        var query = "INSERT INTO UserTb VALUES ('" + userName + "', '" + city + "', '" + password + "', '" + email + "', '" + country + "', '" + address + "', '" + phone + "', '" + firstName + "', '" + lastName + "', '" + cellular + "', '" + creditCardNumber + "', '" + favoriteTeam + "', '" + favoriteCategories + "', '" + securityQuestion + "', '" + securityAnswer + "', '" + cartId + "', '0','" + lastEntry + "')";
         //query = "INSERT INTO UserTb VALUES('michal',"
         db.insert(query, function () {
             query = "SELECT * FROM UserTb WHERE userName = '" + userName + "'";
@@ -135,7 +135,7 @@ router.post('/addToCart', function (req, res) {
                 var price = json.rows[0].price;
                 var image = json.rows[0].image;
                 var numberOfItem = parseInt(json.rows[0].numberOfItem, 10) + 1;
-                var newTotalCartPrice = parseInt(totalCartPrice,10) + parseInt(price,10);
+                var newTotalCartPrice = parseInt(totalCartPrice, 10) + parseInt(price, 10);
                 query = "UPDATE UserTb SET totalCartPrice =" + newTotalCartPrice + " WHERE userName = '" + userName + "'";
                 db.insert(query, function () {
                     //check if the cart already exist this item
@@ -194,47 +194,29 @@ router.get('/displayTheCartItems', function (req, res) {
 //this function get item name and user and rempove this item from the user cart.
 router.post('/removeCartItem', function (req, res) {
     var userName = req.body.userName;
-    var itemName = req.body.itemName;
-    //get the item id
-    var query = "SELECT itemId FROM Item WHERE itemName = '" + itemName + "'";
+    var itemId = req.body.itemId;
+    var query = "SELECT cartId From UserTb WHERE userName = '" + userName + "'";
     db.search(query, function (jsonObj) {
         var json = JSON.parse(jsonObj);
-        if (json.numberOfRows != 0) {
-            var itemId = json.rows[0].itemId;
-            query = "SELECT cartId From UserTb WHERE userName = '" + userName + "'";
-            db.search(query, function (jsonObj) {
-                var json = JSON.parse(jsonObj);
-                if (json.numberOfRows != 0) {
-                    var cartId = json.rows[0].cartId;
-                    //delete the item from the cart
-                    query = "DELETE FROM Cart WHERE itemId ='" + itemId + "' AND cartId = '" + cartId + "'";
-                    db.insert(query, function () {
-                        var obj = {
-                            "itemId": itemId,
-                            "cartId": cartId
-                        }
-                        json = JSON.stringify(obj);
-                        res.send(json);
-                    });
-                } else {
-                    var obj = {};
-                    json = JSON.stringify(obj);
-                    res.send(json);
-                }
-            });
-        } else {
-            var obj = {};
+        var cartId = json.rows[0].cartId;
+        //delete the item from the cart
+        query = "DELETE FROM Cart WHERE itemId ='" + itemId + "' AND cartId = '" + cartId + "'";
+        db.insert(query, function () {
+            var obj = {
+                "itemId": itemId,
+                "cartId": cartId
+            }
             json = JSON.stringify(obj);
             res.send(json);
-        }
+        });
     });
 });
-
 router.get('/getThePreviousOrders', function (req, res) {
     var userName = req.query.userName;
     var query = "Select * FROM OrderTb WHERE userName ='" + userName + "'";
     db.search(query, function (jsonObj) {
         var json = JSON.parse(jsonObj);
+
         res.send(json);
     });
 });

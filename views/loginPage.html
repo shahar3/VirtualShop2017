@@ -32,18 +32,33 @@
 </form>
 
     <div class="container" style="background-color:#f1f1f1">
-        <button type="button" ng-click="backToHomePage()" class="cancelbtn">Cancel</button>
-        <span class="psw">Forgot<br>Please<br>
-            <form name="restorePasswordInput">
-            <p>Enter your user name: <input ng-model="userNameRestore" name="userNameRestore" type="text" pattern="[a-zA-Z]+" placeholder="Enter Username" minlength="3" maxlength="8"
-                    required/></p>
-                <button ng-click="getSecurityQuestion()"  ng-hide="restorePasswordInput.userNameRestore.$error.required">Click here to get your security question</button>
-                <div>{{securityQuestion.rows[0].securityQuestion}}</div>
-                <p>Enter your security answer: <input ng-model="securityAnswer"/></p>
-            <!--<span ng-show="restorePasswordInput.userNameRestore.$error.pattern || restorePasswordInput.userNameRestore.$error.required||restorePasswordInput.userNameRestore.$error.minlength||restorePasswordInput.userNameRestore.$error.maxlength">Username </span>-->
-            <button ng-click="restorePassword()" ng-disabled="restorePasswordInput.userNameRestore.$invalid">Restore password</button>
-            </form>
-        </span>
+        <table>
+            <tr>
+                <!--<td>-->
+                <!--<button type="button" ng-click="backToHomePage()" class="cancelbtn">Cancel</button>-->
+                <!--</td>-->
+                <td>
+                    Restore Password
+                    <p>Enter your user name: <input ng-model="userNameRestore" name="userNameRestore" type="text" pattern="[a-zA-Z]+" placeholder="Enter Username" minlength="3" maxlength="8"
+                                                    required/></p>
+                </td>
+                <form name="restorePasswordInput">
+                    <td>
+                        <button ng-click="getSecurityQuestion()"  ng-hide="restorePasswordInput.userNameRestore.$error.required">Click here to get your security question</button>
+                        <div>{{securityQuestion.rows[0].securityQuestion}}</div>
+
+                    </td>
+                    <td>
+                        <p>Enter your security answer: <input ng-model="securityAnswer"/></p>
+                        <!--<span ng-show="restorePasswordInput.userNameRestore.$error.pattern || restorePasswordInput.userNameRestore.$error.required||restorePasswordInput.userNameRestore.$error.minlength||restorePasswordInput.userNameRestore.$error.maxlength">Username </span>-->
+                    </td>
+                    <td>
+                        <button ng-click="restorePassword()" ng-disabled="restorePasswordInput.userNameRestore.$invalid">Restore password</button>
+                    </td>
+                </form>
+            </tr>
+        </table>
+
     </div>
 
 

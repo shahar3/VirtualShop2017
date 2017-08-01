@@ -37,10 +37,9 @@
                 <li><a ng-click="getItems('men')">Men</a></li>
                 <li><a ng-click="getItems('women')">Women</a></li>
                 <li><a ng-click="getItems('children')">Children</a></li>
-                <li>Sort By:<select>
-                    <option Value="Sort By">Sort By</option>
-                    <option ng-click="sortBy('price')" value="Price">Price</option>
-                    <option ng-click="sortBy('description')" value="Size">Size</option>
+                <li>Sort By:<select ng-change="sortBy(sort)" ng-model="sort">
+                    <option value="Price">Price</option>
+                    <option value="Size">Size</option>
                 </select></li>
                 <li><a><input ng-model="querySearch" id="searchItemInput" align="center"/></a></li>
             </ul>

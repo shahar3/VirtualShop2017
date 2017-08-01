@@ -47,7 +47,7 @@ router.get('/getItems', function (req, res, next) {
 router.get('/getNewItemsLastMonth', function (req, res, next) {
     //get the current date
     var curDate = new Date();
-    var month = curDate.getMonth() + 1;
+    var month = curDate.getMonth();
     var year = curDate.getFullYear();
     console.log('month: ' + month + ' year: ' + year);
     var queryStr = "SELECT * FROM Item WHERE MONTH(dateAdded) = " + month + " AND YEAR(dateAdded) = " + year;

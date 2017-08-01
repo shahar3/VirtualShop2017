@@ -1,6 +1,32 @@
 /**
  * Created by Yakir Hershkoviz on 20/06/2017.
  */
+// var app = angular.module('myApp', ['ngRoute']);
+//
+// //app config
+// app.config(['$routeProvider', function ($routeProvider) {
+//     $routeProvider
+//         .when("/", {
+//             templateUrl: "views/testHtml.html",
+//             controller: "homePageImageController"
+//         })
+//         .when("/login", {
+//             templateUrl: "views/loginPage.html",
+//             controller: "loginController"
+//         }).when("/register", {
+//         templateUrl: "views/register.html",
+//         controller: "registerController"
+//     }).when("/items", {
+//         templateUrl: "views/itemsPage.html",
+//         controller: "itemsPageController"
+//     }).when("/cart",{
+//         templateUrl: "views/cartPage.html",
+//         controller: "cartController"
+//     })
+//         .otherwise({
+//             redirect: '/',
+//         });
+// }]);
 var app = angular.module('myApp', ['ngRoute']);
 
 //app config
@@ -22,11 +48,40 @@ app.config(['$routeProvider', function ($routeProvider) {
     }).when("/cart",{
         templateUrl: "views/cartPage.html",
         controller: "cartController"
+    }).when("/orderPage",{
+        templateUrl: "views/orderpage.html",
+        controller: "orderController"
     })
         .otherwise({
             redirect: '/',
         });
 }]);
+
+app.controller('orderController',function ($scope,$http,$location,openPageService,currentUserNameService) {
+    var path = "http://localhost:3000/users/getThePreviousOrders?userName=ben";
+    var params = {"username": currentUserNameService.currentUserNameFunc()};
+    $http({
+        url: path,
+        method: "GET",
+        params: params
+    }).then(function (response) {
+        $scope.teamsFirstCol = response.data.rows;
+    });
+    $scope.getDetails = function (itemId) {
+        var path = "http://localhost:3000/items/getItemDetails";
+        params = {"itemId": itemId};
+        $http({
+            url: path,
+            method: "GET",
+            params: params
+        }).then(function (response) {
+            var itemDetails = response.data.rows[0];
+            var myWindow = window.open("","detailsWindow","width=500,height=400");
+            myWindow.document.write("Item Name: " + itemDetails.itemName + ", Size: " + itemDetails.description +
+                ", Price: " + itemDetails.price + ", category: " + itemDetails.category);
+        });
+    }
+});
 
 app.controller('loginController', function ($scope, $http, $location, openPageService,currentUserNameService) {
     $scope.onlyNumbers = /^\d+$/;
@@ -39,6 +94,7 @@ app.controller('loginController', function ($scope, $http, $location, openPageSe
             } else {
                 currentUserNameService.updateCurrentUserName($scope.userName);
                 currentUserNameService.updaeLastEntry(response.data.rows[0].lastEntry);
+                document.cookie = "login" + $scope.userName + "-----" + $scope.password + "; secure;";
                 openPageService.openPage('/');
             }
             $scope.test = response.data;
@@ -65,15 +121,16 @@ app.controller('loginController', function ($scope, $http, $location, openPageSe
             params: params
         }).then(function (response) {
             $scope.securityQuestion = response.data;
-            $http.post("")
+            //$http.post("")
         });
     }
 });
 
-app.controller('testC', function () {
-    $scope.check = function () {
-        alert("check");
-    }
+app.controller('testC', function ($http) {
+    var params = {};
+    $http.post("http://localhost:3000/users/restorePassword", params).then(function (response) {
+        alert(response.data);
+    });
 });
 
 app.controller('homePageController', function ($scope, $http, $location, openPageService) {
@@ -85,12 +142,10 @@ app.controller('homePageController', function ($scope, $http, $location, openPag
 
 app.controller('homePageImageController', function ($scope, $http, $location, openPageService,currentUserNameService,addToCartService) {
     $http.get("http://localhost:3000/items/getTopFive").then(function (response) {
-        $scope.img_url = response.data;
-        $scope.img_url1 = response.data;
-        $scope.img_url2 = response.data;
-        $scope.img_url3 = response.data;
-        $scope.img_url4 = response.data;
-        $scope.img_url5 = response.data;
+        $scope.teamsFirstCol = response.data.rows;
+        $http.get("http://localhost:3000/items/getNewItemsLastMonth").then(function(response){
+           $scope.teamsRecCol = response.data.rows;
+        });
     });
     if(currentUserNameService.currentUserNameFunc()==""){
         $scope.userSignIn = false;
@@ -112,7 +167,6 @@ app.controller('homePageImageController', function ($scope, $http, $location, op
         openPageService.openPage('/items');
     }
     $scope.addToCart = function (itemName) {
-        alert("add to cart " + itemName);
         addToCartService.addToCart(itemName);
         // if(currentUserNameService.currentUserNameFunc() == ""){
         //     alert("You need to login before making a purchase");
@@ -128,7 +182,7 @@ app.controller('homePageImageController', function ($scope, $http, $location, op
 app.factory('CurrentuserName',function (userName) {
     var userName = userName;
     return{
-        userName
+        //userName
    }
 });
 
@@ -181,6 +235,10 @@ app.controller('itemsPageController', function ($scope, $http, $location,current
         openPageService.openPage(path);
     };
     $scope.sortBy = function (sortBy) {
+        alert("sortBy");
+        if(sortBy=="Size"){
+            sortBy = "description";
+        }
         var params = {"sortBy":sortBy};
         $http({
             url: "http://localhost:3000/items/sortBy",
@@ -195,6 +253,28 @@ app.controller('itemsPageController', function ($scope, $http, $location,current
 
 
 app.controller('registerController', function ($scope, $http, $location, openPageService) {
+    //read xml file
+    var ajxObj;
+    if(window.XMLHttpRequest){
+        ajxObj = new XMLHttpRequest();
+    }else{
+        ajxObj = new ActiveXObject('Microsoft.XMLHTTP');
+    }
+    ajxObj.open('GET','countries.xml',false);
+    ajxObj.send();
+    var myXml = ajxObj.responseText;
+    var country = myXml.getElementsByTagName("Country");
+    document.write(country[0].getElementsByTagName("ID")[0].childNodes[0].nodeValue);
+
+    // if(!xmlData){
+    //     xmlData = (new DOMParser()).parseFromString(xml.responseText,'text/xml');
+    //     var emp = xmlData.getElementsByTagName("Countries");
+    // var firstCountry = xmlData.data.getElementsByTagName("ID");
+    // alert(firstCountry[0]);
+    // alert(firstCountry);
+    // var firstCountry = emp.getElementsByTagName("NAME")[0].firstChild.data;
+    //     alert(firstCountry);
+    // }
     $scope.backToHomePage = function () {
         openPageService.openPage('/');
     };
@@ -228,14 +308,14 @@ app.controller('registerController', function ($scope, $http, $location, openPag
     };
 });
 
-app.controller('cartController',function ($scope, $http, $location,currentUserNameService) {
+app.controller('cartController',function ($scope, $http, $location,currentUserNameService,openPageService) {
+    var allSortedItems = {};
     var params = {"userName": currentUserNameService.currentUserNameFunc()};
     $http({
         url:"http://localhost:3000/users/displayTheCartItems",
         method:"GET",
         params:params
     }).then(function (response) {
-        // alert(response.data.totalCartPrice);
         $scope.teamsFirstCol = response.data.rows;
         var userName = currentUserNameService.currentUserNameFunc();
         var path = "http://localhost:3000/users/getLastEntry?userName=" + userName;
@@ -250,16 +330,86 @@ app.controller('cartController',function ($scope, $http, $location,currentUserNa
     });
     $scope.removeFromCart = function (itemId) {
         var userName = currentUserNameService.currentUserNameFunc();
+        var params = {"userName":userName,"itemId":itemId};
+        $http.post("http://localhost:3000/users/RemoveCartItem",params).then(function (response) {
+            params = {"userName": currentUserNameService.currentUserNameFunc()};
+            $http({
+                url:"http://localhost:3000/users/displayTheCartItems",
+                method:"GET",
+                params:params
+            }).then(function (response) {
+                $scope.teamsFirstCol = response.data.rows;
+                userName = currentUserNameService.currentUserNameFunc();
+                var path = "http://localhost:3000/users/getLastEntry?userName=" + userName;
+                params = {"username": userName};
+                $http({
+                    url: path,
+                    method: "GET",
+                    params: params
+                }).then(function (response) {
+                    $scope.totalPrice = response.data;
+                });
+            });
+        });
+
     };
+    $scope.getDetails = function (itemId) {
+        var path = "http://localhost:3000/items/getItemDetails";
+        params = {"itemId": itemId};
+        $http({
+            url: path,
+            method: "GET",
+            params: params
+        }).then(function (response) {
+            var itemDetails = response.data.rows[0];
+            var myWindow = window.open("","detailsWindow","width=500,height=400");
+            myWindow.document.write("Item Name: " + itemDetails.itemName + ", Size: " + itemDetails.description +
+            ", Price: " + itemDetails.price + ", category: " + itemDetails.category);
+        });
+    }
     $scope.sortBy = function (sortBy) {
+        if(sortBy=="Size"){
+            sortBy="description";
+        }
         var params = {"sortBy":sortBy};
         $http({
             url: "http://localhost:3000/items/sortBy",
             method: "GET",
             params: params
         }).then(function (response) {
-            $scope.teamsFirstCol = response.data.rows;
+            var sortedItems=[];
+            // $scope.teamsFirstCol = response.data.rows;
+            allSortedItems = response.data;
+            //get the cartItem
+            var params = {"userName": currentUserNameService.currentUserNameFunc()};
+            $http({
+                url:"http://localhost:3000/users/displayTheCartItems",
+                method:"GET",
+                params:params
+            }).then(function (response) {
+                for(var i = 0;i < allSortedItems.numberOfRows;i++){
+                    for(var j = 0;j < response.data.numberOfRows;j++){
+                        if(response.data.rows[j].itemId == allSortedItems.rows[i].itemId){
+                            sortedItems.push(allSortedItems.rows[i]);
+                        }
+                    }
+                }
+                $scope.teamsFirstCol = sortedItems;
+                var userName = currentUserNameService.currentUserNameFunc();
+                var path = "http://localhost:3000/users/getLastEntry?userName=" + userName;
+                var params = {"username": userName};
+                $http({
+                    url: path,
+                    method: "GET",
+                    params: params
+                }).then(function (response) {
+                    $scope.totalPrice = response.data;
+                });
+            });
         });
+    };
+    $scope.displayPage = function (path) {
+        openPageService.openPage(path);
     };
 });
 
@@ -290,11 +440,9 @@ app.factory('currentUserNameService',function () {
    }
 });
 
-app.factory('addToCartService',function (currentUserNameService) {
+app.factory('addToCartService',function ($http,currentUserNameService) {
    return{
        addToCart: function (itemName) {
-           alert("addToCartService " + itemName);
-           alert(currentUserNameService.currentUserNameFunc());
            if (currentUserNameService.currentUserNameFunc() == "") {
                alert("You need to login before making a purchase");
                return;
