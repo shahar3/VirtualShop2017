@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="../angular.js"></script>
-    <script src="../angular-route.js"></script>
-    <script src="../client.js"></script>
+    <script src="../../angular.js"></script>
+    <script src="../../angular-route.js"></script>
+    <script src="../../client.js"></script>
+    <script src="ordersController.js"></script>
 
 </head>
 <body>
@@ -34,23 +35,14 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
-                <li>Sort By:<select ng-change="sortBy(sort)" ng-model="sort">
-                    <option  value="Price">Price</option>
-                    <option  value="Size">Size</option>
-                </select></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a ng-click="displayPage('/orderPage')"><span class="glyphicon glyphicon-shopping-cart"></span> My Orders</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> My Orders</a></li>
             </ul>
         </div>
     </div>
 </nav>
 
-
-
-<div>
-    Total Price: {{totalPrice.rows[0].totalCartPrice }}
-</div>
 <div id="leftImg">
     <div class="container" ng-repeat="shirt in teamsFirstCol">
         <div class="row">
@@ -63,9 +55,6 @@
                         Price: {{shirt.price}} , Quantity: {{shirt.numberOfItem}}
                         <table>
                             <tr>
-                                <td>
-                                    <button ng-click="removeFromCart(shirt.itemId)">Remove From Cart</button>
-                                </td>
                                 <td>
                                     <button ng-click="getDetails(shirt.itemId)">Details</button>
                                 </td>
