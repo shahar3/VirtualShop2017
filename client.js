@@ -27,6 +27,8 @@
 //             redirect: '/',
 //         });
 // }]);
+
+
 var app = angular.module('myApp', ['ngRoute']);
 
 //app config
@@ -94,7 +96,6 @@ app.controller('loginController', function ($scope, $http, $location, openPageSe
             } else {
                 currentUserNameService.updateCurrentUserName($scope.userName);
                 currentUserNameService.updaeLastEntry(response.data.rows[0].lastEntry);
-                document.cookie = "login" + $scope.userName + "-----" + $scope.password + "; secure;";
                 openPageService.openPage('/');
             }
             $scope.test = response.data;
@@ -140,13 +141,68 @@ app.controller('homePageController', function ($scope, $http, $location, openPag
 
 });
 
-app.controller('homePageImageController', function ($scope, $http, $location, openPageService,currentUserNameService,addToCartService) {
+app.factory('cookie',function () {
+    return {
+
+        set: function (name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            }
+            else
+                var expires = "";
+            document.cookie = name + "=" + JSON.stringify(value) + expires + "; path=/";
+        },
+
+        get : function(name){
+            var nameEQ = name + "=",
+                ca = document.cookie.split(';');
+
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0)
+                    return  JSON.parse(c.substring(nameEQ.length,c.length));
+            }
+
+            return null;
+        }
+
+    }
+});
+app.controller('homePageImageController', function ($scope, $http, $location, openPageService,cookie,currentUserNameService,addToCartService) {
     $http.get("http://localhost:3000/items/getTopFive").then(function (response) {
         $scope.teamsFirstCol = response.data.rows;
         $http.get("http://localhost:3000/items/getNewItemsLastMonth").then(function(response){
-           $scope.teamsRecCol = response.data.rows;
+            $scope.teamsRecCol = response.data.rows;
+            checkCookie();
         });
     });
+    //check for cookie
+    function checkCookie() {
+        var cookieValue = cookie.get('loginCookie');
+        if (cookieValue != null) {
+            alert("cookie detected");
+            var params = {"userName": cookieValue.userName, "password": cookieValue.password};
+            alert("params: " + cookieValue.userName + " | " + cookieValue.password);
+            $http.post("http://localhost:3000/users/login", params).then(function (response) {
+                var data = response.data;
+                if (data.numberOfRows == 0) {
+                    alert("user name or password are incorrect");
+                } else {
+                    alert("in the else");
+                    currentUserNameService.updateCurrentUserName(cookieValue.userName);
+                    currentUserNameService.updaeLastEntry(response.data.rows[0].lastEntry);
+                    $scope.afterUserSignIn = true;
+                    $scope.userSignIn = true;
+                    $scope.currentUser = currentUserNameService.currentUserNameFunc();
+                    $scope.lastEntry = currentUserNameService.currentLastEntry();
+                    openPageService.openPage('/');
+                }
+            });
+        }
+    }
     if(currentUserNameService.currentUserNameFunc()==""){
         $scope.userSignIn = false;
         $scope.afterUserSignIn = false;
@@ -183,7 +239,7 @@ app.factory('CurrentuserName',function (userName) {
     var userName = userName;
     return{
         //userName
-   }
+    }
 });
 
 app.controller('itemsPageController', function ($scope, $http, $location,currentUserNameService,openPageService,addToCartService) {
@@ -252,20 +308,20 @@ app.controller('itemsPageController', function ($scope, $http, $location,current
 
 
 
-app.controller('registerController', function ($scope, $http, $location, openPageService) {
+app.controller('registerController', function ($scope, $http, $location, openPageService,cookie) {
     //read xml file
-    var ajxObj;
-    if(window.XMLHttpRequest){
-        ajxObj = new XMLHttpRequest();
-    }else{
-        ajxObj = new ActiveXObject('Microsoft.XMLHTTP');
+    $scope.countries = [];
+    function doxml() {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", "countries.xml", false);
+        xmlhttp.send();
+        var xmldata = xmlhttp.responseXML;
+        var x = xmldata.getElementsByTagName("Country");
+        for(var i = 0; i < x.length; i++) {
+            $scope.countries.push(x[i].getElementsByTagName("Name")[0].childNodes[0].nodeValue);
+        }
     }
-    ajxObj.open('GET','countries.xml',false);
-    ajxObj.send();
-    var myXml = ajxObj.responseText;
-    var country = myXml.getElementsByTagName("Country");
-    document.write(country[0].getElementsByTagName("ID")[0].childNodes[0].nodeValue);
-
+    doxml();
     // if(!xmlData){
     //     xmlData = (new DOMParser()).parseFromString(xml.responseText,'text/xml');
     //     var emp = xmlData.getElementsByTagName("Countries");
@@ -279,12 +335,15 @@ app.controller('registerController', function ($scope, $http, $location, openPag
         openPageService.openPage('/');
     };
     $scope.addUser = function () {
+        var x = document.getElementById("contriesSelect");
+        var strCountry = x.options[x.selectedIndex].value;
+        strCountry = strCountry.substring(7);
         var params = {
             "userName": $scope.userName,
             "city": $scope.city,
             "password": $scope.password,
             "email": $scope.email,
-            "country": $scope.country,
+            "country": strCountry,
             "address": $scope.address,
             "phone": $scope.phone,
             "firstName": $scope.firstName,
@@ -300,6 +359,9 @@ app.controller('registerController', function ($scope, $http, $location, openPag
             var data = response.data;
             if (data.numberOfRows > 0) {
                 alert("You have signed up");
+                //
+                //create cookie
+                cookie.set('loginCookie',{userName:params.userName,password:params.password},30);
                 openPageService.openPage('/login');
             } else {
                 alert("There was a problem, please try again");
@@ -364,7 +426,7 @@ app.controller('cartController',function ($scope, $http, $location,currentUserNa
             var itemDetails = response.data.rows[0];
             var myWindow = window.open("","detailsWindow","width=500,height=400");
             myWindow.document.write("Item Name: " + itemDetails.itemName + ", Size: " + itemDetails.description +
-            ", Price: " + itemDetails.price + ", category: " + itemDetails.category);
+                ", Price: " + itemDetails.price + ", category: " + itemDetails.category);
         });
     }
     $scope.sortBy = function (sortBy) {
@@ -422,35 +484,37 @@ app.factory('openPageService', function ($location) {
 });
 
 app.factory('currentUserNameService',function () {
-   var currentUserName = "";
-   var currentLastEntry = "";
-   return{
-       currentUserNameFunc: function () {
-           return currentUserName;
-       },
-       updateCurrentUserName: function (userName) {
-           currentUserName = userName;
-       },
-       updaeLastEntry: function (lastEntry) {
-           currentLastEntry = lastEntry;
-       },
-       currentLastEntry: function () {
+    var currentUserName = "";
+    var currentLastEntry = "";
+    return{
+        currentUserNameFunc: function () {
+            return currentUserName;
+        },
+        updateCurrentUserName: function (userName) {
+            currentUserName = userName;
+        },
+        updaeLastEntry: function (lastEntry) {
+            currentLastEntry = lastEntry;
+        },
+        currentLastEntry: function () {
             return currentLastEntry;
-       }
-   }
+        }
+    }
 });
 
+
+
 app.factory('addToCartService',function ($http,currentUserNameService) {
-   return{
-       addToCart: function (itemName) {
-           if (currentUserNameService.currentUserNameFunc() == "") {
-               alert("You need to login before making a purchase");
-               return;
-           }
-           var params = {"userName": currentUserNameService.currentUserNameFunc(), "itemName": itemName};
-           $http.post("http://localhost:3000/users/addToCart", params).then(function (response) {
-               alert("The item was added to the cart");
-           });
-       }
-   }
+    return{
+        addToCart: function (itemName) {
+            if (currentUserNameService.currentUserNameFunc() == "") {
+                alert("You need to login before making a purchase");
+                return;
+            }
+            var params = {"userName": currentUserNameService.currentUserNameFunc(), "itemName": itemName};
+            $http.post("http://localhost:3000/users/addToCart", params).then(function (response) {
+                alert("The item was added to the cart");
+            });
+        }
+    }
 });

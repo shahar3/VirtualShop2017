@@ -34,9 +34,11 @@
         <input type="text" ng-model="email" placeholder="Enter email" name="email" required>
         <span ng-show="registerForm.email.$error.required || registerForm.email.$error.email">email is required</span>
         <br>
-        <label><b>Country</b></label>
-        <input type="text" ng-model="country" placeholder="Enter Country" name="country" required>
-        <span ng-show="registerForm.country.$error.required">Country is required</span>
+        <br>
+        <label><b>Country:</b></label>
+        <select id="contriesSelect" ng-model="user.country" name="userCountry" ng-options="country for country in countries" ng-required="true"></select>
+        <span ng-show="registerForm.userCountry.$touched && registerForm.userCountry.$invalid">country is required. </span>
+        <br>
         <br>
         <label><b>Address</b></label>
         <input type="text" ng-model="address" placeholder="Enter Address" name="address" required>

@@ -53,7 +53,7 @@ router.post('/register', function (req, res) {
     var lastName = req.body.lastName;
     var cellular = req.body.cellular;
     var creditCardNumber = req.body.creditCardNumber;
-    var favoriteTeam = req.body.favoriteTeam;
+    var favoriteTeam = req.body.favouriteTeam;
     var favoriteCategories = req.body.favouriteCategories;
     var securityQuestion = req.body.securityQuestion;
     var securityAnswer = req.body.securityAnswer;
