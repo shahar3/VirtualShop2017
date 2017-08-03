@@ -8,7 +8,9 @@ angular.module('myApp').controller('itemsPageController', function ($scope, $htt
     }else{
         $scope.afterUserSignIn = true;
         $scope.currentUser = currentUserNameService.currentUserNameFunc();
-        $scope.lastEntry = currentUserNameService.currentLastEntry();
+        var lastEntry = currentUserNameService.currentLastEntry();
+        var subLastEntry = lastEntry.substring(0,10);
+        $scope.lastEntry = subLastEntry;
     }
     $http({
         url: "http://localhost:3000/items/getItems",
@@ -51,7 +53,6 @@ angular.module('myApp').controller('itemsPageController', function ($scope, $htt
         openPageService.openPage(path);
     };
     $scope.sortBy = function (sortBy) {
-        alert("sortBy");
         if(sortBy=="Size"){
             sortBy = "description";
         }

@@ -3,7 +3,7 @@
  */
 //order controller
 angular.module('myApp').controller('orderController',function ($scope,$http,$location,openPageService,currentUserNameService) {
-    var path = "http://localhost:3000/users/getThePreviousOrders?userName=ben";
+    var path = "http://localhost:3000/users/getThePreviousOrders" + "?userName=" + currentUserNameService.currentUserNameFunc();
     var params = {"username": currentUserNameService.currentUserNameFunc()};
     $http({
         url: path,
@@ -26,4 +26,7 @@ angular.module('myApp').controller('orderController',function ($scope,$http,$loc
                 ", Price: " + itemDetails.price + ", category: " + itemDetails.category);
         });
     }
+   $scope.openPage = function (path) {
+        openPageService.openPage(path);
+   }
 });

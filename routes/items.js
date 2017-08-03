@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
 
 //this function return the top 5 items that purchased more.
 router.get('/getTopFive', function (req, res, next) {
-    var queryStr = "SELECT * FROM Item JOIN ( SELECT TOP 7 itemId, count(*) total FROM OrderTb GROUP BY itemId order by total desc ) sub ON Item.itemId = sub.itemId";
+    var queryStr = "SELECT * FROM Item JOIN ( SELECT TOP 5 itemId, count(*) total FROM OrderTb GROUP BY itemId order by total desc ) sub ON Item.itemId = sub.itemId";
     db.search(queryStr, function (jsonObj) {
         var json = JSON.parse(jsonObj);
         res.send(jsonObj);

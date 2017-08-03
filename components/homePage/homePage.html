@@ -10,25 +10,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-
-    <!--<style>-->
-    <!--/* Remove the navbar's default rounded borders and increase the bottom margin */-->
-    <!--.navbar {-->
-    <!--margin-bottom: 50px;-->
-    <!--border-radius: 0;-->
-    <!--}-->
-
-    <!--/* Remove the jumbotron's default bottom margin */-->
-    <!--.jumbotron {-->
-    <!--margin-bottom: 0;-->
-    <!--}-->
-
-    <!--/* Add a gray background color and some padding to the footer */-->
-    <!--footer {-->
-    <!--background-color: #f2f2f2;-->
-    <!--padding: 25px;-->
-    <!--}-->
-    <!--</style>-->
 </head>
 <body>
 <div  class="jumbotron">
@@ -51,9 +32,6 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
                 <li><a ng-click="displayItemsPage()">Products</a></li>
-                <li><a href="#">Deals</a></li>
-                <li><a href="#">Stores</a></li>
-                <li><a href="#">Contact</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a ng-hide="userSignIn" ng-click="displayPage('/login')"><span
@@ -64,101 +42,14 @@
                 <li><a ng-show="afterUserSignIn">Hello,
                     <div>{{currentUser}}, Last Entry: {{lastEntry}}</div>
                 </a></li>
+                <li><a ng-hide="afterUserSignIn">Hello, guest
+                </a></li>
                 <li><a ng-show="afterUserSignIn" ng-click="displayPage('/cart')"><span
                         class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
             </ul>
         </div>
     </div>
 </nav>
-<!--<img src="http://images.sportsdirect.com/images/products/37707601_4pl.jpg"/>-->
-<!--<div class="container">-->
-    <!--<div class="row">-->
-        <!--<div class="col-sm-4">-->
-            <!--<div class="panel panel-primary">-->
-                <!--<div class="panel-heading">{{img_url.rows[0].itemName}}-->
-                <!--</div>-->
-                <!--<div id="image1" class="panel-body"><img ng-click="addToCart()" ng-src="{{img_url.rows[0].image}}"-->
-                                                         <!--class="img-responsive"-->
-                                                         <!--style="width:100%" alt="Image">-->
-                <!--</div>-->
-                <!--<div class="panel-footer" align="center">-->
-                    <!--Price: {{img_url.rows[0].price}} , Quantity: {{img_url.rows[0].quantity}} , Size:-->
-                    <!--{{img_url.rows[0].description}}-->
-                    <!--<button ng-click="addToCart(img_url.rows[0].itemName)">Add To Cart</button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-sm-4">-->
-            <!--<div class="panel panel-danger">-->
-                <!--<div class="panel-heading">{{img_url1.rows[1].itemName}}</div>-->
-                <!--<div class="panel-body"><img ng-src="{{img_url1.rows[1].image}}" class="img-responsive"-->
-                                             <!--style="width:100%" alt="Image"></div>-->
-                <!--<div class="panel-footer" align="center">-->
-                    <!--Price: {{img_url1.rows[1].price}} , Quantity: {{img_url1.rows[1].quantity}} , Size:-->
-                    <!--{{img_url1.rows[1].description}}-->
-                    <!--<button ng-click="addToCart(img_url1.rows[1].itemName)">Add To Cart</button>-->
-                <!--</div>-->
-            <!--</div>-->
-
-
-        <!--</div>-->
-
-        <!--<div class="col-sm-4">-->
-            <!--<div class="panel panel-success">-->
-                <!--<div class="panel-heading">{{img_url2.rows[2].itemName}}</div>-->
-                <!--<div class="panel-body"><img ng-src="{{img_url2.rows[2].image}}" class="img-responsive"-->
-                                             <!--style="width:100%" alt="Image"></div>-->
-                <!--<div class="panel-footer" align="center">-->
-                    <!--Price: {{img_url2.rows[2].price}} , Quantity: {{img_url2.rows[2].quantity}} , Size:-->
-                    <!--{{img_url2.rows[2].description}}-->
-                    <!--<button ng-click="addToCart(img_url2.rows[2].itemName)">Add To Cart</button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-<!--<br>-->
-
-<!--<div class="container">-->
-    <!--<div class="row">-->
-        <!--<div class="col-sm-4">-->
-            <!--<div class="panel panel-primary">-->
-                <!--<div class="panel-heading">{{img_url3.rows[3].itemName}}</div>-->
-                <!--<div class="panel-body"><img ng-src="{{img_url3.rows[3].image}}" class="img-responsive"-->
-                                             <!--style="width:100%" alt="Image"></div>-->
-                <!--<div class="panel-footer" align="center">-->
-                    <!--Price: {{img_url3.rows[3].price}} , Quantity: {{img_url3.rows[3].quantity}} , Size:-->
-                    <!--{{img_url3.rows[3].description}}-->
-                    <!--<button ng-click="addToCart(img_url3.rows[3].itemName)">Add To Cart</button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-sm-4">-->
-            <!--<div class="panel panel-primary">-->
-                <!--<div class="panel-heading">{{img_url4.rows[4].itemName}}</div>-->
-                <!--<div class="panel-body"><img ng-src="{{img_url4.rows[4].image}}" class="img-responsive"-->
-                                             <!--style="width:100%" alt="Image"></div>-->
-                <!--<div class="panel-footer" align="center">-->
-                    <!--Price: {{img_url4.rows[4].price}} , Quantity: {{img_url4.rows[4].quantity}} , Size:-->
-                    <!--{{img_url4.rows[4].description}}-->
-                    <!--<button ng-click="addToCart(img_url4.rows[4].itemName)">Add To Cart</button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-sm-4">-->
-            <!--<div class="panel panel-primary">-->
-                <!--<div class="panel-heading">{{img_url5.rows[5].itemName}}</div>-->
-                <!--<div class="panel-body"><img ng-src="{{img_url5.rows[5].image}}" class="img-responsive"-->
-                                             <!--style="width:100%" alt="Image"></div>-->
-                <!--<div class="panel-footer" align="center">-->
-                    <!--Price: {{img_url5.rows[5].price}} , Quantity: {{img_url5.rows[5].quantity}} , Size:-->
-                    <!--{{img_url5.rows[5].description}}-->
-                    <!--<button ng-click="addToCart(img_url5.rows[5].itemName)">Add To Cart</button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
 
 <div id="leftImg">
     <label id="labelAllItems">Top Five</label>
@@ -178,7 +69,7 @@
         </div>
     </div>
 </div>
-<div id="left">
+<div id="left" ng-show="afterUserSignIn">
     <label id="labelRecItems">Last Month Items</label>
     <div class="container" ng-repeat="team in teamsRecCol">
         <div class="row">

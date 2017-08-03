@@ -12,23 +12,22 @@ angular.module('myApp').controller('homePageImageController', function ($scope, 
     });
     //check for cookie
     function checkCookie() {
-        var cookieValue = cookie.get('loginCookie!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        var cookieValue = cookie.get('loginCookie');
         if (cookieValue != null) {
-            alert("cookie detected");
             var params = {"userName": cookieValue.userName, "password": cookieValue.password};
-            alert("params: " + cookieValue.userName + " | " + cookieValue.password);
             $http.post("http://localhost:3000/users/login", params).then(function (response) {
                 var data = response.data;
                 if (data.numberOfRows == 0) {
                     alert("user name or password are incorrect");
                 } else {
-                    alert("in the else");
                     currentUserNameService.updateCurrentUserName(cookieValue.userName);
                     currentUserNameService.updaeLastEntry(response.data.rows[0].lastEntry);
                     $scope.afterUserSignIn = true;
                     $scope.userSignIn = true;
                     $scope.currentUser = currentUserNameService.currentUserNameFunc();
-                    $scope.lastEntry = currentUserNameService.currentLastEntry();
+                    var lastEntry = currentUserNameService.currentLastEntry();
+                    var subLastEntry = lastEntry.substring(0,10);
+                    $scope.lastEntry = subLastEntry;
                     openPageService.openPage('/');
                 }
             });
@@ -41,7 +40,10 @@ angular.module('myApp').controller('homePageImageController', function ($scope, 
         $scope.afterUserSignIn = true;
         $scope.userSignIn = true;
         $scope.currentUser = currentUserNameService.currentUserNameFunc();
-        $scope.lastEntry = currentUserNameService.currentLastEntry();
+        var lastEntry = currentUserNameService.currentLastEntry();
+        var subLastEntry = lastEntry.substring(0,10);
+        $scope.lastEntry = subLastEntry;
+
     }
     $scope.test = function () {
         alert("testfunction");
