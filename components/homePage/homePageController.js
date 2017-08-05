@@ -63,6 +63,7 @@ angular.module('myApp').controller('homePageImageController', function ($scope, 
         myWindow.document.write("In this work we used many important technologies both server-side and client-side. " +
             "Working with Angular Technology greatly simplified the work."+
         "The main difficulty was in understanding the principles of services." +
-        "Another challenge was designing the site.");
+        "Another challenge was designing the site." +
+        "our game: http://pacmanys.rf.gd");
     }
 });
