@@ -57,13 +57,12 @@ angular.module('myApp').controller('homePageImageController', function ($scope, 
     }
     $scope.addToCart = function (itemName) {
         addToCartService.addToCart(itemName);
-        // if(currentUserNameService.currentUserNameFunc() == ""){
-        //     alert("You need to login before making a purchase");
-        //     return;
-        // }
-        // var params = {"userName":currentUserNameService.currentUserNameFunc(),"itemName": itemName };
-        // $http.post("http://localhost:3000/users/addToCart",params).then(function (response) {
-        //     alert("The item was added to the cart");
-        // });
+    }
+    $scope.displayAboutPage = function () {
+        var myWindow = window.open("","aboutWindow","width=500,height=400");
+        myWindow.document.write("In this work we used many important technologies both server-side and client-side. " +
+            "Working with Angular Technology greatly simplified the work."+
+        "The main difficulty was in understanding the principles of services." +
+        "Another challenge was designing the site.");
     }
 });
